@@ -15,4 +15,4 @@ deploy:
   script:
     docker push leersma/tamikabot:latest;
   on:
-    branch: master
+    branch: main
