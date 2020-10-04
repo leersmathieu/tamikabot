@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - node
+services:
+  - docker
+
+before_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin # Login to dockerhub
+
+script:
+  - docker build -t leersma/tamikabot:latest .
+
+deploy:
+  provider: script
+  script:
+    docker push leersma/tamikabot:latest;
+  on:
+    branch: master
