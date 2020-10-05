@@ -173,19 +173,19 @@ bot.on('message', async message => { //QUAND UN MESSAGE EST ENVOYE....
         return Google.action(message)
     }
     if (Bank.match(message, prefix)){
-        let bdd = JSON.parse(fs.readFileSync("monnaie.json", "utf8"));
+        let bdd = JSON.parse(fs.readFileSync("db/monnaie.json", "utf8"));
         return Bank.action(message, bdd)
     }
     if (Coin.match(message, prefix)){
-        let bdd = JSON.parse(fs.readFileSync("monnaie.json", "utf8"));
+        let bdd = JSON.parse(fs.readFileSync("db/monnaie.json", "utf8"));
         return Coin.action(message, bdd, fs, tamikara) // FS c'est pour pouvoir ecrire
     }
     if (Work.match(message, prefix)){
-        let bdd = JSON.parse(fs.readFileSync("monnaie.json", "utf8"));
+        let bdd = JSON.parse(fs.readFileSync("db/monnaie.json", "utf8"));
         return Work.action(message, bdd, fs)
     }
     if (Joke.match(message, prefix)){
-        let bdd = JSON.parse(fs.readFileSync("joke.json", "utf8"));
+        let bdd = JSON.parse(fs.readFileSync("db/joke.json", "utf8"));
         return Joke.action(message, bdd, fs)
     }
     if (Play.match(message, prefix)){
