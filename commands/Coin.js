@@ -55,7 +55,7 @@ module.exports = class Coin {
                         bdd[user.id].coin = bdd[user.id].coin + nombreDeCoins //Ajoute X coin à la personne mentionnée
                         bdd[user.id].username = user.username
                 
-                        fs.writeFile("./monnaie.json", JSON.stringify(bdd), (err) => {
+                        fs.writeFile("./db/monnaie.json", JSON.stringify(bdd), (err) => {
                             if(err) message.channel.send("Une erreur est survenue");
                         }); //Permet de sauvegarder dans la bdd
                         message.channel.send(`Vous avez donné ${nombreDeCoins} coins à ${user.username}`)
@@ -96,7 +96,7 @@ module.exports = class Coin {
                         bdd[user.id].coin = bdd[user.id].coin - nombreDeCoins //Ajoute X coin à la personne mentionnée
                         bdd[user.id].username = user.username
                 
-                        fs.writeFile("./monnaie.json", JSON.stringify(bdd), (err) => {
+                        fs.writeFile("./db/monnaie.json", JSON.stringify(bdd), (err) => {
                             if(err) message.channel.send("Une erreur est survenue");
                         }); //Permet de sauvegarder dans la bdd
                         message.channel.send(`Vous avez retiré ${nombreDeCoins} coins à ${user.username}`)
