@@ -1,7 +1,6 @@
 const Discord = require('discord.js')
 const bot =  new Discord.Client()
-// const DiscordKey = process.env.DISCORD_KEY;
-const DiscordKey = "NDY5MDcyMjQyODY1NjAyNTYx.XPZD-Q.y6hi75miC9uDoqj22BCmlz2kxpU"
+const DiscordKey = process.env.DISCORD_KEY;
 //-//
 const fs = require("fs");
 
