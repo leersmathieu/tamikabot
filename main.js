@@ -1,11 +1,16 @@
+//- ##CREATION DU BOT## -//
 const Discord = require('discord.js')
 const bot =  new Discord.Client()
-const DiscordKey = process.env.DISCORD_KEY;
-//-//
-const fs = require("fs");
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+//- #### -//
+const fs = require("fs"); //File system
+
+//- ##LOG IN TO THE BOT (WITH DISCORD TOKEN)## -// 
+bot.login(DISCORD_TOKEN)
+// bot.login("TOKEN")
 
 
-// mycommands :
+// mes commandes :
 const Help = require('./commands/Help')
 const Google = require('./commands/Google')
 const Bank = require('./commands/Bank')
@@ -16,7 +21,8 @@ const Work = require('./commands/Work')
 const Joke = require('./commands/Joke')
 const Say = require('./commands/Say')
 
-////
+
+// définitions des variables
 var srvDmz
 var srvTamco
 var srvPdPortal
@@ -27,7 +33,6 @@ var srvBeCode
 var tamikara
 var prefix = "$"
 
-bot.login(DiscordKey)
 
 bot.on('ready', () => { //WHEN THE BOT IS READY.....
 
@@ -60,10 +65,10 @@ bot.on('ready', () => { //WHEN THE BOT IS READY.....
 })
 
 
-bot.on('guildMemberAdd', (member) => { // QUAND QUELQUN REJOIN LE SERVEUR...
-    if (member.guild.id === srvDmz.id){ //Si le mec est sur le serveur DMZ
-        member.setRoles(['430142179890167818']).catch(console.error)
-        bot.channels.get("430139980598214656").send('hummm welcome ? '+member).catch(console.error)
+bot.on('guildMemberAdd', (member) => { // QUAND QUELQUN REJOIN UN SERVEUR...
+    if (member.guild.id === srvDmz.id){ //Si le mec EST sur le serveur DMZ...
+        member.setRoles(['430142179890167818']).catch(console.error) // On lui assigne un rôle
+        bot.channels.get("430139980598214656").send('hummm welcome ? '+member).catch(console.error) // Et on lui souhaite la bienvenue
     }
 })
 
@@ -74,12 +79,11 @@ bot.on('message', async message => { //QUAND UN MESSAGE EST ENVOYE....
         tamikara = message.author
     }
 
-    //ATTENTION CECI EST UN TEST DANGEREUX A DESTINATION D'ODILE
+    ////ATTENTION CECI EST UN TEST DANGEREUX A DESTINATION D'ODILE/
     // if (message.author.id == "712279385926795275"){
     //     message.reply("Et si on se parlait... forever ?")
     // }
-
-    /////////////////////FIN DU TEST/////////////////////////////
+    /////////////////////FIN DU TEST//////////////////////////////
 
     let regex_lea = /é|è/gi //variable contenant les charactères a remplacer ainsi que les paramètres (pour le replace())
     let leamessage = message.toString().replace(regex_lea, "e").toLowerCase() //restructuration du message pour pouvoir le travailler
