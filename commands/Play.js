@@ -27,27 +27,40 @@ module.exports = class Play {
             return false;
             
         }
-        if (videoState != 1) {
+
+        if (videoState != 1) {//Si aucune vidéo en cour de lecture....
             
             // On récupère les arguments de la commande 
-            // il faudrait utiliser une expression régulière pour valider le lien youtube
             let args = message.content.split(' ')
-            // On rejoint le channel audio
-            voiceChannel.join().then(function (connection) {
-                // On démarre un stream à partir de la vidéo youtube
-                let stream = YoutubeStream(args[1])
-                stream.on('error', function () {
-                    message.reply("Je n'ai pas réussi à lire cette vidéo :(")
-                    connection.disconnect()
+            console.log(args)
+            let url = args[1] 
+            let regex_ytb = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/ // expression régulière pour valider le lien youtube
+            
+            if (url.match(regex_ytb)){
+                console.log("continue")
+                // On rejoint le channel audio
+                voiceChannel.join().then(function (connection) {
+                    console.log("connection")
+                    // On démarre un stream à partir de la vidéo youtube
+                    let stream = YoutubeStream(args[1])
+                    connection.playStream(stream).on('error', function () {
+                        message.reply("Je n'ai pas réussi à lire cette vidéo :(")
+                        connection.disconnect()
+                        return false;
+                    })
+                    videoState = 1
+                    // On envoie le stream au channel audio
+                    // Il faudrait ici éviter les superpositions (envoie de plusieurs vidéo en même temps)
+                    connection.playStream(stream).on('end', function () {
+                        videoState = 0
+                        console.log("Video End")
+                        connection.disconnect()
+                    })
                 })
-                videoState = 1
-                // On envoie le stream au channel audio
-                // Il faudrait ici éviter les superpositions (envoie de plusieurs vidéo en même temps)
-                connection.playStream(stream).on('end', function () {
-                    videoState = 0
-                    connection.disconnect()
-                })
-            })
+            }else {
+                console.log("stop")
+                message.reply("Bad URL !")
+            }
         }else {
             message.reply("Je diffuse déjà du contenu, veuillez patentier")
         }
