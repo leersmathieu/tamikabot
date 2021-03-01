@@ -105,3 +105,9 @@ dist
 
 # Docker Compose
 docker-compose.yml
+
+# python ignore
+
+.idea
+venv/
+commands/__pycache__/
