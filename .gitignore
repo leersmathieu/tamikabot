@@ -110,4 +110,4 @@ docker-compose.yml
 
 .idea
 venv/
-commands/__pycache__/
+bot/cogs/__pycache__/

@@ -2,7 +2,7 @@ from discord.ext import commands
 import urllib.parse
 
 
-class Googlisation(commands.Cog):
+class Google(commands.Cog):
 
     @commands.command(name='google', pass_context=True)
     async def google_search(self, ctx, *, entry):
