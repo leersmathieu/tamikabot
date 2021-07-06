@@ -13,5 +13,6 @@ class Googlisation(commands.Cog):
             url = urllib.parse.quote(entry)
             await ctx.send('https://www.google.com/search?q=' + url)
 
-        except:
+        except Exception as error:
+            print(error)
             ctx.send('Invalid URL')
