@@ -1,32 +1,33 @@
 from collections import defaultdict
 
-from discord import DMChannel, Intents
 from discord.ext import commands
 from discord.message import Message
 
-from discord_slash import SlashCommand
-
-from .cogs import Messages
 from .cogs import Google
 from .cogs import Joke
+from .cogs import Messages
+from .config import Config
+
+# from discord_slash import SlashCommand
 # from .cogs import SetupJoke
 
-from .config import Config
 config = Config()
+
+
 # database = Database(config.DB_HOST, config.DB_PASSWORD)
 
 # Doc: https://discordpy.readthedocs.io/en/latest/ext/commands/api.html
 class Bot(commands.Bot):
 
     def __init__(self):
-        commands_prefixes = ['/']
+        commands_prefixes = ['$']
         super().__init__(commands_prefixes)
         self.token = config.TOKEN
         self.history = defaultdict(lambda: False)
 
         # Register all Cogs
-        # self.add_cog(Messages(self))
-        # self.add_cog(Google(self))
+        self.add_cog(Messages(self))
+        self.add_cog(Google(self))
         self.add_cog(Joke(self))
 
         # self.setup_commands()

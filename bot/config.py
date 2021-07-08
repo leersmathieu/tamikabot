@@ -7,6 +7,7 @@ class Config:
         # Discord authentication
         self.TOKEN = environ.get('DISCORD_TOKEN')
         self.APP_ID = environ.get('DISCORD_APP_ID')
+
         # MongoDB authentication
         # self.DB_HOST = environ.get('DB_HOST')
         # self.DB_PASSWORD = environ.get('DB_PASSWORD')

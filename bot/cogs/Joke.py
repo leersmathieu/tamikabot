@@ -2,7 +2,7 @@ from discord.ext import commands
 import pandas
 import random
 import base64
-import requests
+# import requests
 
 
 class Joke(commands.Cog):
@@ -14,13 +14,12 @@ class Joke(commands.Cog):
         decoding = base64.b64decode(df.iloc[rnumber, 0])
         await ctx.send(decoding.decode("utf-8"))
 
-
-    # @commands.command(name='joke_tts')
-    # async def say_joke_tts(self, ctx):
-    #     df = pandas.read_csv("./bot/db/joke.csv", sep=" ")
-    #     rnumber = random.randint(1, len(df))
-    #     decoding = base64.b64decode(df.iloc[rnumber, 0])
-    #     await ctx.send(decoding.decode("utf-8"), tts=True)
+    @commands.command(name='joke_tts')
+    async def say_joke_tts(self, ctx):
+        df = pandas.read_csv("./bot/db/joke.csv", sep=" ")
+        rnumber = random.randint(1, len(df))
+        decoding = base64.b64decode(df.iloc[rnumber, 0])
+        await ctx.send(decoding.decode("utf-8"), tts=True)
 
 # class SetupJoke:
 #     def say_joke(self):

@@ -1,10 +1,13 @@
 from discord.ext import commands
-
+from googletrans import Translator, constants
 
 class Messages(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.tamikara_id = 183999045168005120
+
+        # init the Google API translator
+        self.translator = Translator()
 
     @commands.command(name='del_messages')
     async def delete_messages(self, ctx, number_of_messages: int):
@@ -16,6 +19,11 @@ class Messages(commands.Cog):
         else:
             await ctx.send('Permission denied!')
 
+    @commands.command(name='translate')
+    async def translate(self, ctx, language: str, *, sentences: str):
+        translator = self.translator
+        translation = translator.translate(sentences, dest=language)
+        await ctx.send(f"{translation.origin} ({translation.src}) --> {translation.text} ({translation.dest})")
 
     @commands.command(name='say', pass_context=True)
     async def say(self, ctx, chan_id: int, *, text):
@@ -37,3 +45,4 @@ class Messages(commands.Cog):
             except Exception as error:
                 print(error)
                 await ctx.send('Invalid Way')
+
