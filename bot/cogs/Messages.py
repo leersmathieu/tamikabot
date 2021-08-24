@@ -14,7 +14,7 @@ class Messages(commands.Cog):
         if ctx.message.author.guild_permissions.manage_messages:
             messages = await ctx.channel.history(limit=number_of_messages + 1).flatten()
             for message in messages:
-                print(message.content)
+                print(f'deleted messages :{message.content}')
                 await message.delete()
         else:
             await ctx.send('Permission denied!')

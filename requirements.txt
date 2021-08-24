@@ -1,2 +1,5 @@
-discord.py=1.7.4
-pandas==1.2.4
+discord.py
+pandas
+art
+googletrans
+requests

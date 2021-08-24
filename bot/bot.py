@@ -4,6 +4,7 @@ from discord.ext import commands
 from discord.message import Message
 
 from .cogs import Google
+from .cogs import Art
 from .cogs import Joke
 from .cogs import Messages
 from .config import Config
@@ -29,6 +30,8 @@ class Bot(commands.Bot):
         self.add_cog(Messages(self))
         self.add_cog(Google(self))
         self.add_cog(Joke(self))
+        self.add_cog(Art(self))
+
 
         # self.setup_commands()
 
