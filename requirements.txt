@@ -1,5 +1,5 @@
-discord.py
+discord.py==1.7.3
 pandas
 art
-googletrans
+googletrans==4.0.0rc1
 requests
