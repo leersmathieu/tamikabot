@@ -111,3 +111,4 @@ docker-compose.yml
 .idea
 venv/
 bot/cogs/__pycache__/
+.ipynb_checkpoints

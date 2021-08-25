@@ -4,7 +4,7 @@ import math
 import random
 from art import *
 
-list_type_ascii = ["block","","standard"]
+list_type_ascii = ["","standard"]
 
 
 class Art(commands.Cog):
