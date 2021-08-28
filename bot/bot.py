@@ -7,6 +7,7 @@ from .cogs import Google
 from .cogs import Art
 from .cogs import Joke
 from .cogs import Bank
+from .cogs import Stream
 from .cogs import Messages
 from .config import Config
 
@@ -33,6 +34,7 @@ class Bot(commands.Bot):
         self.add_cog(Joke(self))
         self.add_cog(Art(self))
         self.add_cog(Bank(self))
+        self.add_cog(Stream(self))
 
 
 
