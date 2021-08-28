@@ -13,8 +13,10 @@ class Bank(commands.Cog):
             self.db: pd.DataFrame = pickle.load(handle)
 
     @commands.command(name='add_coins', pass_context=True)
-    async def add_coins(self, ctx: Context, user, amount):
-
+    async def add_coins(self, ctx: Context, user: str, amount: int):
+        """
+        Add ( or remove if negative number ) a given amount of coins for the given user
+        """
         user = str(re.findall(r'\b\d+\b', user)[0])
         user_mention = await self.bot.fetch_user(int(user))
 
@@ -39,7 +41,9 @@ class Bank(commands.Cog):
 
     @commands.command(name='bank', pass_context=True)
     async def bank(self, ctx: Context):
-
+        """
+        See your bank account
+        """
         try:
             await ctx.send(f"Tu as {self.db.loc[str(ctx.author.id), 'bank']} coins")
 

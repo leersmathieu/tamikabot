@@ -1,4 +1,6 @@
 from discord.ext import commands
+from discord.ext.commands.context import Context
+
 import sys
 import math
 import random
@@ -12,8 +14,11 @@ class Art(commands.Cog):
         self.bot = bot
 
     @commands.command(name='ascii', pass_context=True)
-    async def ascii(self, ctx, *, entry):
-        art_1 = text2art(str(entry),str(random.choice(list_type_ascii)))
+    async def ascii(self, ctx: Context, *, sentences: str):
+        """
+        Transform a given sentence by ascii art
+        """
+        art_1 = text2art(str(sentences),str(random.choice(list_type_ascii)))
         await ctx.send(f"```{art_1}```")
 
 
