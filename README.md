@@ -2,7 +2,12 @@
 
 The TAMIKABOT is a little discord bot able to make few things like *saying joke, delete messages, playing music, translate sentences, etc*
 
-Actual features ON :
+## NodeJs Version :
+
+https://github.com/leersmathieu/tamikabot/tree/nodejs
+
+
+## Actual features ON :
 
 - Art  
   - ascii :       Transform a given sentence by ascii art  
