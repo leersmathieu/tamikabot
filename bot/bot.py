@@ -9,6 +9,7 @@ from .cogs import Joke
 from .cogs import Bank
 from .cogs import Stream
 from .cogs import Messages
+from .cogs import Lfg
 from .config import Config
 
 # from discord_slash import SlashCommand
@@ -34,6 +35,7 @@ class Bot(commands.Bot):
         self.add_cog(Joke(self))
         self.add_cog(Art(self))
         self.add_cog(Bank(self))
+        self.add_cog(Lfg(self))
         self.add_cog(Stream(self))
 
 
