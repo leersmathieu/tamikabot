@@ -7,13 +7,11 @@ class Lfg(commands.Cog):
         self.bot = bot
 
     @commands.command(name='lfg', pass_context=True)
-    async def google_search(self, ctx: Context):
+    @commands.cooldown(1, 3600, commands.BucketType.user)
+    async def looking_for_group(self, ctx: Context):
         """
         Looking for group systeme for Payday2france Discord
         """
-        try:
-            await ctx.send('recherche de groupe')
 
-        except Exception as error:
-            print(error)
-            ctx.send('Not avalaible')
+        mesage_author = ctx.author.id
+        await ctx.send(f'Avis à la <@&973556338275799120>, <@{mesage_author}> a besoin de vous, là, maintenant !')

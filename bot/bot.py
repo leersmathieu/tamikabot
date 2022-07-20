@@ -11,12 +11,11 @@ from .cogs import Stream
 from .cogs import Messages
 from .cogs import Lfg
 from .config import Config
+from .events import Events
 
-# from discord_slash import SlashCommand
 # from .cogs import SetupJoke
 
 config = Config()
-
 
 # database = Database(config.DB_HOST, config.DB_PASSWORD)
 
@@ -25,7 +24,9 @@ class Bot(commands.Bot):
 
     def __init__(self):
         commands_prefixes = ['$']
+    
         super().__init__(commands_prefixes)
+
         self.token = config.TOKEN
         self.history = defaultdict(lambda: False)
 
@@ -37,13 +38,9 @@ class Bot(commands.Bot):
         self.add_cog(Bank(self))
         self.add_cog(Lfg(self))
         self.add_cog(Stream(self))
-
-
-
-        # self.setup_commands()
-
-    # def setup_commands(self):
-    #     SetupJoke().setup()
+        
+        # Register personnal events
+        self.add_cog(Events(self))
 
     def run(self):
         """
@@ -56,22 +53,23 @@ class Bot(commands.Bot):
     async def on_ready(self):
         """Triggered when the bot connects to Discord."""
 
-        # Print a confirmation message to the console
-        print(f'Bot connected to Discord with id: "{self.user}".')
+        print('Ready!')
+        print('Logged in as ---->', self.user)
+        print('ID:', self.user.id)
 
-    async def on_message(self, message: Message):
-        """
-        Triggered when a message is send on any channel/server that the
-        bot have access.
-        """
+    # async def on_message(self, message):
+    #     """
+    #     Triggered when a message is send on any channel/server that the
+    #     bot have access.
+    #     """
 
-        # Don't respond to ourselves
-        if message.author == self.user:
-            return
+    #     # Don't respond to ourselves
+    #     if message.author == self.user:
+    #         return
 
-        # Don't respond to any bot
-        if message.author.bot:
-            return
+    #     # Don't respond to any bot
+    #     if message.author.bot:
+    #         return
+        
+    #     print(message)
 
-        # Trigger the Cogs
-        await super(Bot, self).on_message(message)
