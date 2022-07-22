@@ -1,15 +1,11 @@
 from discord.ext import commands
 from discord.ext.commands.context import Context
 
-from googletrans import Translator, constants
 
 class Messages(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.tamikara_id = 183999045168005120
-
-        # init the Google API translator
-        self.translator = Translator()
 
     @commands.command(name='del_messages')
     async def delete_messages(self, ctx: Context, number_of_messages: int):
@@ -23,15 +19,6 @@ class Messages(commands.Cog):
                 await message.delete()
         else:
             await ctx.send('Permission denied!')
-
-    @commands.command(name='translate')
-    async def translate(self, ctx: Context, language: str, *, sentences: str):
-        """
-        Translate a given text to a given language
-        """
-        translator = self.translator
-        translation = translator.translate(sentences, dest=language)
-        await ctx.send(f"{translation.origin} ({translation.src}) --> {translation.text} ({translation.dest})")
 
     @commands.command(name='say', pass_context=True)
     async def say(self, ctx: Context, chan_id: int, *, text: str):

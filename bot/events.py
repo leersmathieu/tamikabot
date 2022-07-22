@@ -8,8 +8,12 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx: Context, error):
         if isinstance(error, commands.CommandOnCooldown):
-            msg="Rechargement de mes ressources, veuillez patienter encore {:.2f}s avant de retenter cette action".format(error.retry_after)
+            msg=f"Rechargement de mes ressources, veuillez patienter encore {round(error.retry_after)}s avant de retenter cette action"
             await ctx.send(msg)
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        """Triggered when the bot connects to Discord."""
 
+        print('Ready!')
 
