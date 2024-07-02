@@ -32,3 +32,11 @@ https://github.com/leersmathieu/tamikabot/tree/nodejs
   - stop:         Stop the audio
 - No Category
   - help:         Shows this message
+
+## DEV
+
+Pour le lancer avec docker il faut entrer le DISCORD_TOKEN en variable d'environement
+
+Exemple : 
+
+docker run -e DISCORD_TOKEN='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'  46tr4b6tr

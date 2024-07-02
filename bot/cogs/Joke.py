@@ -4,6 +4,12 @@ import pandas
 import random
 import base64
 
+import logging
+
+# Configuration du logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 class Joke(commands.Cog):
 
@@ -12,6 +18,7 @@ class Joke(commands.Cog):
         """
         The bot say a random joke
         """
+        logger.info("requesting joke")
         df = pandas.read_csv("./bot/db/joke.csv", sep=" ")
         rnumber = random.randint(1, len(df))
         decoding = base64.b64decode(df.iloc[rnumber, 0])
