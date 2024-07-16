@@ -8,6 +8,7 @@ RUN pip install -r requirements.txt
 
 COPY . /opt/app
 
-
 ENTRYPOINT [ "python" ]
 CMD [ "main.py" ]
+
+# CMD ["python", "check_versions.py"]

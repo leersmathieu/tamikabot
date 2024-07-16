@@ -3,14 +3,22 @@ from discord.ext.commands.context import Context
 import pickle
 import pandas as pd
 import re
+import logging
 
+# Configuration du logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class Bank(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.tamikara_id = 183999045168005120
-        with open('./bot/db/filename.pickle', 'rb') as handle:
-            self.db: pd.DataFrame = pickle.load(handle)
+        try:
+            with open('./bot/db/filename.pickle', 'rb') as handle:
+                self.db: pd.DataFrame = pickle.load(handle)
+                logger.info("DataFrame loaded successfully.")
+        except Exception as e:
+            logger.error(f"Error loading DataFrame: {e}")
 
     @commands.command(name='add_coins', pass_context=True)
     async def add_coins(self, ctx: Context, user: str, amount: int):

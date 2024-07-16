@@ -12,7 +12,7 @@ from .cogs import Messages
 from .cogs import Lfg
 from .config import Config
 from .events import Events
-from .db import lfg_sentences  # Importation des phrases
+from .lfg_sentences import lfg_sentences  # Importation des phrases
 
 import logging
 
