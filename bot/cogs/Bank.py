@@ -34,7 +34,8 @@ class Bank(commands.Cog):
                     self.db.at[user, 'bank'] += int(amount)
 
                 else:
-                    self.db = self.db.append(pd.Series({'bank': int(amount)}, name=user))
+                    new_row = pd.DataFrame({'bank': [int(amount)]}, index=[user])
+                    self.db = pd.concat([self.db, new_row])
 
                 # print(self.db)
                 with open('./bot/db/filename.pickle', 'wb') as handle:

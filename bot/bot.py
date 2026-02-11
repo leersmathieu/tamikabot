@@ -69,12 +69,8 @@ class Bot(commands.Bot):
         if message.author.bot:
             return
         
-        logger.info(f"Message from {message.author.name} in {message.channel.name}: {message.content}")
+        channel_name = getattr(message.channel, 'name', 'DM')
+        logger.info(f"Message from {message.author.name} in {channel_name}: {message.content}")
 
         # Process commands
         await self.process_commands(message)
-
-bot = Bot()
-
-if __name__ == "__main__":
-    bot.run()

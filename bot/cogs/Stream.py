@@ -3,7 +3,7 @@ from discord import VoiceClient, ClientException, VoiceChannel
 from discord.ext import commands
 from discord.ext.commands import CommandInvokeError
 from discord.ext.commands.context import Context
-import youtube_dl
+import yt_dlp
 import os
 import logging
 
@@ -66,7 +66,7 @@ class Stream(commands.Cog):
 
         logger.info("Downloading audio from URL: %s", url)
         try:
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
         except Exception as e:
             logger.error("Error downloading audio: %s", e)
@@ -108,7 +108,6 @@ class Stream(commands.Cog):
             voice.cleanup()
             await voice.disconnect()
         else:
-            voice.cleanup()
             logger.info("Bot not connected to any voice channel")
             await ctx.send("Not connected")
 
@@ -163,8 +162,8 @@ class Stream(commands.Cog):
         
         if voice:
             logger.info("Stopping audio and disconnecting")
+            voice.stop()
             voice.cleanup()
-            await voice.stop()
             await voice.disconnect()
             
         for file in os.listdir("./"):

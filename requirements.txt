@@ -4,4 +4,4 @@ art==6.2
 googletrans==4.0.0rc1
 requests==2.32.3
 PyNaCL==1.5.0
-youtube_dl==2021.12.17
+yt-dlp==2024.12.6
