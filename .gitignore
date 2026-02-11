@@ -103,9 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-# Docker Compose
-docker-compose.yml
-
 # python ignore
 
 .idea

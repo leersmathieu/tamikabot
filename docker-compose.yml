@@ -1,0 +1,8 @@
+services:
+  tamikabot:
+    image: leersma/tamikabot:latest
+    restart: unless-stopped
+    volumes:
+      - ./bot/db/:/opt/app/bot/db/
+    env_file:
+      - .env
