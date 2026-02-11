@@ -1,42 +1,115 @@
-# tamikabot
+# TamikaBot
 
-The TAMIKABOT is a little discord bot able to make few things like *saying joke, delete messages, playing music, translate sentences, etc*
+Bot Discord personnel écrit en Python avec `discord.py` (v2.4.0). Architecture modulaire via Cogs, conteneurisé avec Docker.
 
-## NodeJs Version :
+## Démarrage rapide
 
+### 1. Cloner le dépôt
+```bash
+git clone https://github.com/leersmathieu/tamikabot.git
+cd tamikabot
+```
+
+### 2. Configuration
+Créer un fichier `.env` à la racine :
+```bash
+DISCORD_TOKEN = VOTRE_TOKEN_DISCORD_ICI
+ADMIN_ID = VOTRE_ID_DISCORD_ADMIN
+```
+
+### 3. Lancement avec Docker Compose (recommandé)
+```bash
+docker-compose up -d
+```
+
+### 4. Lancement avec Docker (manuel)
+```bash
+docker build -t leersma/tamikabot:latest .
+docker run -e DISCORD_TOKEN='VOTRE_TOKEN' -e ADMIN_ID='VOTRE_ID' -v ./bot/db/:/opt/app/bot/db/ leersma/tamikabot:latest
+```
+
+## Commandes disponibles
+
+### Art
+- `$ascii <texte>` — Convertit le texte en art ASCII
+
+### Bank
+- `$add_coins <@user> <montant>` — Ajoute/retire des coins (admin `ADMIN_ID`)
+- `$bank` — Affiche votre solde
+
+### Google
+- `$google <recherche>` — Renvoie un lien de recherche Google
+- `$translate <lang> <texte>` — Traduit le texte
+
+### Joke
+- `$joke` — Envoie une blague aléatoire
+- `$joke_tts` — Blague avec text-to-speech
+
+### Messages
+- `$del_messages <N>` — Supprime N messages (requiert `manage_messages`)
+- `$say <channel_id> <texte>` — Envoie un message (admin `ADMIN_ID`)
+
+### Stream
+- `$play <url>` — Joue une musique YouTube
+- `$pause` / `$resume` / `$stop` / `$reset` / `$leave` — Contrôle audio
+
+## Configuration requise
+
+### Variables d'environnement
+| Variable | Description | Obligatoire |
+|---|---|---|
+| `DISCORD_TOKEN` | Token d'authentification du bot | Oui |
+| `ADMIN_ID` | ID Discord de l'admin (commandes sensibles) | Oui |
+
+### Intents Discord
+Activer dans le [portail développeur Discord](https://discord.com/developers/applications) → Bot → Privileged Gateway Intents :
+- **Message Content Intent**
+
+## Tests
+
+```bash
+# Via Docker (recommandé)
+docker run --rm leersma/tamikabot:latest -m pytest tests/ -v
+
+# En local
+python -m pytest tests/ -v
+```
+
+Les tests couvrent tous les Cogs (sauf Stream) et la configuration du bot.
+
+## Documentation
+
+La documentation technique a été découpée en plusieurs fichiers dans `docs/` :
+- `docs/README.md` — Sommaire
+- `docs/overview.md` — Vue d'ensemble
+- `docs/architecture.md` — Architecture du projet
+- `docs/configuration.md` — Configuration détaillée
+- `docs/cogs.md` — Détail des commandes
+- `docs/deployment.md` — Déploiement (Docker)
+- `docs/tests.md` — Tests
+- `docs/intents.md` — Intents Discord
+- `docs/notes.md` — Points d'attention
+
+## Développement
+
+### Prérequis locaux
+- Python 3.9+
+- ffmpeg (dans le PATH pour la musique)
+
+### Installation locale
+```bash
+pip install -r requirements.txt
+export DISCORD_TOKEN='VOTRE_TOKEN'
+export ADMIN_ID='VOTRE_ID'
+python main.py
+```
+
+## Historique
+
+- **v2.x** : Migration vers `discord.py` 2.4.0, Intents, tests unitaires, documentation découpée, suppression LFG, configuration `ADMIN_ID`
+- **v1.x** : Version initiale Python (migration depuis Node.js)
+
+## Node.js Version
+
+La version originale en Node.js est toujours disponible :
 https://github.com/leersmathieu/tamikabot/tree/nodejs
-
-
-## Actual features ON :
-
-- Art  
-  - ascii :       Transform a given sentence by ascii art  
-- Bank  
-  - add_coins:    Add ( or remove if negative number ) a given amount of coins for the given user
-  - bank:         See your bank account
-- Google
-  - google:       From a given entry return a simple search from google
-- Joke
-  - joke:         The bot say a random joke
-  - joke_tts:     The bot say a random joke with text to speech active
-- Messages
-  - del_messages:Delete X messages from the current channel
-  - say:          The bot say a given message to a given channel
-  - translate:    Translate a given text to a given language
-- Stream
-  - leave:        Disconnect the bot from the current voice channel
-  - pause:        Pause the audio
-  - play:         Download one song from a given url and play it on your current channel
-  - reset:        Reset the bot by stopping and removing mp3 file and leaving the channel
-  - resume:       Resume the audio
-  - stop:         Stop the audio
-- No Category
-  - help:         Shows this message
-
-## DEV
-
-Pour le lancer avec docker il faut entrer le DISCORD_TOKEN en variable d'environement
-
-Exemple : 
-
-docker run -e DISCORD_TOKEN='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'  46tr4b6tr
