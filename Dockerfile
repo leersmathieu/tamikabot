@@ -1,5 +1,7 @@
 FROM python:3.9-slim-bookworm
 
+ENV OPENBLAS_NUM_THREADS=1
+
 WORKDIR /opt/app
 
 RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*

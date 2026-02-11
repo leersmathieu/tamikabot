@@ -24,7 +24,7 @@ class Stream(commands.Cog):
         """
         Download one song from a given url and play it on your current discord channel
         """
-        logger.info("Received play command with URL: %s", url)
+        logger.info(f"Received play command with URL: {url}")
 
         if not ctx.author.voice:
             await ctx.send("You are not connected to a voice channel.")
@@ -33,10 +33,10 @@ class Stream(commands.Cog):
 
         voice_channel = ctx.author.voice.channel
         try:
-            logger.info("Attempting to connect to voice channel: %s", voice_channel.name)
+            logger.info(f"Attempting to connect to voice channel: {voice_channel.name}")
             await voice_channel.connect()
         except (PermissionError, ClientException) as error:
-            logger.error("Error connecting to voice channel: %s", error)
+            logger.error(f"Error connecting to voice channel: {error}")
             await ctx.send(f"Error connecting to voice channel: {error}")
             return
 
@@ -49,7 +49,7 @@ class Stream(commands.Cog):
         # Assurez-vous qu'aucun fichier précédent n'interfère
         for file in os.listdir("./"):
             if file.endswith(".mp3"):
-                logger.info("Removing previous file: %s", file)
+                logger.info(f"Removing previous file: {file}")
                 os.remove(file)
 
         ydl_opts = {
@@ -64,12 +64,12 @@ class Stream(commands.Cog):
             'throttled-rate': '1M',
         }
 
-        logger.info("Downloading audio from URL: %s", url)
+        logger.info(f"Downloading audio from URL: {url}")
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
         except Exception as e:
-            logger.error("Error downloading audio: %s", e)
+            logger.error(f"Error downloading audio: {e}")
             await ctx.send(f"Error downloading audio: {e}")
             return
 
@@ -85,7 +85,7 @@ class Stream(commands.Cog):
             await ctx.send("Failed to download audio.")
             return
 
-        logger.info("Renaming downloaded file to song.mp3: %s", downloaded_file)
+        logger.info(f"Renaming downloaded file to song.mp3: {downloaded_file}")
         os.rename(downloaded_file, "song.mp3")
 
         logger.info("Playing audio: song.mp3")
@@ -93,7 +93,7 @@ class Stream(commands.Cog):
             voice.play(discord.FFmpegPCMAudio("song.mp3"))
             await ctx.send("Playing your song.")
         except Exception as e:
-            logger.error("Error playing audio: %s", e)
+            logger.error(f"Error playing audio: {e}")
             await ctx.send(f"Error playing audio: {e}")
 
     @commands.command(name='leave')
@@ -168,5 +168,5 @@ class Stream(commands.Cog):
             
         for file in os.listdir("./"):
             if file.endswith(".mp3"):
-                logger.info("Removing file: %s", file)
+                logger.info(f"Removing file: {file}")
                 os.remove(file)
