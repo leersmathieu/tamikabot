@@ -2,33 +2,27 @@
  
 ## Améliorations techniques prioritaires
  
-### 1. Migration vers discord.py 2.x + Slash Commands
- 
-**Pourquoi** : discord.py 1.7.3 est obsolète. Discord déprécie progressivement les prefix commands au profit des **Application Commands** (slash commands `/`). Les bots non vérifiés perdent l'accès au contenu des messages sans l'Intent `MESSAGE_CONTENT` (Privileged Intent à activer manuellement).
- 
-**Impact** :
-- Remplacement de `commands.Bot` par un bot avec `discord.Intents` explicites
-- Migration des commandes `$xxx` vers `/xxx` (autocomplétion native dans Discord)
-- `add_cog()` devient asynchrone en 2.x → `await bot.add_cog(...)`
-- `pass_context=True` n'existe plus (le `ctx` est toujours passé)
+### ~~1. Migration vers discord.py 2.x~~ ✅
+
+**Réalisé.** Migration de discord.py 1.7.3 vers 2.4.0 :
+- Intents explicites (`message_content`)
+- `add_cog()` asynchrone via `setup_hook()`
+- `pass_context=True` supprimé de toutes les commandes
 - `history().flatten()` remplacé par `[m async for m in channel.history()]`
- 
-**Estimation** : Moyenne — nécessite de toucher tous les Cogs mais la logique reste la même.
+- Tests unitaires ajoutés (20 tests, tous passent)
+
+**Note** : Les slash commands (`/`) ne sont pas encore implémentés. Les commandes restent en prefix `$`. La migration vers les slash commands est une évolution future possible.
  
 ---
  
-### 2. Gestion des Intents
- 
-**Pourquoi** : Même sans migrer vers 2.x, Discord requiert désormais les **Privileged Gateway Intents** pour lire le contenu des messages. Sans ça, `on_message` ne reçoit rien.
- 
-**Action minimale** (discord.py 1.7.3) :
+### ~~2. Gestion des Intents~~ ✅
+
+**Réalisé.** Intents configurés dans `bot.py` :
 ```python
 intents = discord.Intents.default()
-intents.messages = True
-intents.message_content = True  # Privileged Intent
-super().__init__(commands_prefixes, intents=intents)
+intents.message_content = True
 ```
-+ Activer "Message Content Intent" dans le portail développeur Discord (Bot > Privileged Gateway Intents).
+**Action restante** : Activer "Message Content Intent" dans le portail développeur Discord (Bot > Privileged Gateway Intents).
  
 ---
  
@@ -67,12 +61,11 @@ Cela supprime le temps de téléchargement et la gestion des fichiers temporaire
  
 ### 6. Centraliser la configuration des IDs
  
-**Pourquoi** : L'ID admin (`tamikara_id = 183999045168005120`) est dupliqué dans `Bank.py` et `Messages.py`. L'ID du rôle LFG est hardcodé dans `lfg_sentences.py`.
+**Pourquoi** : L'ID admin (`tamikara_id = 183999045168005120`) est dupliqué dans `Bank.py` et `Messages.py`.
  
 **Solution** : Tout centraliser dans `config.py` via des variables d'environnement :
 ```
 ADMIN_ID=183999045168005120
-LFG_ROLE_ID=973556338275799120
 ```
  
 ---

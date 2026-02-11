@@ -5,6 +5,8 @@ import pandas as pd
 import re
 import logging
 
+from ..config import Config
+
 # Configuration du logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -12,7 +14,8 @@ logger = logging.getLogger(__name__)
 class Bank(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.tamikara_id = 183999045168005120
+        config = Config()
+        self.admin_id = int(config.ADMIN_ID) if config.ADMIN_ID else None
         try:
             with open('./bot/db/filename.pickle', 'rb') as handle:
                 self.db: pd.DataFrame = pickle.load(handle)
@@ -20,7 +23,7 @@ class Bank(commands.Cog):
         except Exception as e:
             logger.error(f"Error loading DataFrame: {e}")
 
-    @commands.command(name='add_coins', pass_context=True)
+    @commands.command(name='add_coins')
     async def add_coins(self, ctx: Context, user: str, amount: int):
         """
         Add ( or remove if negative number ) a given amount of coins for the given user
@@ -28,7 +31,7 @@ class Bank(commands.Cog):
         user = str(re.findall(r'\b\d+\b', user)[0])
         user_mention = await self.bot.fetch_user(int(user))
 
-        if ctx.message.author.id == self.tamikara_id:
+        if self.admin_id and ctx.message.author.id == self.admin_id:
             try:
                 if user in self.db.index.tolist():
                     self.db.at[user, 'bank'] += int(amount)
@@ -48,7 +51,7 @@ class Bank(commands.Cog):
         else:
             await ctx.send(f"{user_mention.mention} dont try to break the rules!")
 
-    @commands.command(name='bank', pass_context=True)
+    @commands.command(name='bank')
     async def bank(self, ctx: Context):
         """
         See your bank account

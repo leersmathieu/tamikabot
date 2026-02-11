@@ -13,7 +13,7 @@ class Art(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='ascii', pass_context=True)
+    @commands.command(name='ascii')
     async def ascii(self, ctx: Context, *, sentences: str):
         """
         Transform a given sentence by ascii art

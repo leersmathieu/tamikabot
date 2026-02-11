@@ -1,11 +1,14 @@
 from discord.ext import commands
 from discord.ext.commands.context import Context
 
+from ..config import Config
+
 
 class Messages(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.tamikara_id = 183999045168005120
+        config = Config()
+        self.admin_id = int(config.ADMIN_ID) if config.ADMIN_ID else None
 
     @commands.command(name='del_messages')
     async def delete_messages(self, ctx: Context, number_of_messages: int):
@@ -13,14 +16,14 @@ class Messages(commands.Cog):
         Delete X messages from the current channel
         """
         if ctx.message.author.guild_permissions.manage_messages:
-            messages = await ctx.channel.history(limit=number_of_messages + 1).flatten()
+            messages = [m async for m in ctx.channel.history(limit=number_of_messages + 1)]
             for message in messages:
                 print(f'deleted messages :{message.content}')
                 await message.delete()
         else:
             await ctx.send('Permission denied!')
 
-    @commands.command(name='say', pass_context=True)
+    @commands.command(name='say')
     async def say(self, ctx: Context, chan_id: int, *, text: str):
         """
         The bot say a given message to a given channel
@@ -33,7 +36,7 @@ class Messages(commands.Cog):
         if ctx.message.author.bot:
             return
 
-        if ctx.message.author.id == self.tamikara_id:
+        if self.admin_id and ctx.message.author.id == self.admin_id:
 
             try:
                 channel = self.bot.get_channel(chan_id)

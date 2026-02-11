@@ -19,7 +19,7 @@ class Stream(commands.Cog):
         self.bot = bot
         logger.info("Stream Cog initialized")
 
-    @commands.command(name='play', pass_context=True)
+    @commands.command(name='play')
     async def play(self, ctx: Context, url: str):
         """
         Download one song from a given url and play it on your current discord channel
@@ -96,7 +96,7 @@ class Stream(commands.Cog):
             logger.error("Error playing audio: %s", e)
             await ctx.send(f"Error playing audio: {e}")
 
-    @commands.command(name='leave', pass_context=True)
+    @commands.command(name='leave')
     async def leave(self, ctx: Context):
         """
         Disconnect the bot from the current voice channel
@@ -111,7 +111,7 @@ class Stream(commands.Cog):
             logger.info("Bot not connected to any voice channel")
             await ctx.send("Not connected")
 
-    @commands.command(name='pause', pass_context=True)
+    @commands.command(name='pause')
     async def pause(self, ctx: Context):
         """
         Pause the audio
@@ -125,7 +125,7 @@ class Stream(commands.Cog):
             logger.info("No audio is playing")
             await ctx.send("No audio is playing")
 
-    @commands.command(name='resume', pass_context=True)
+    @commands.command(name='resume')
     async def resume(self, ctx: Context):
         """
         Resume the audio
@@ -139,7 +139,7 @@ class Stream(commands.Cog):
             logger.info("Audio not paused")
             await ctx.send("Audio not paused")
 
-    @commands.command(name='stop', pass_context=True)
+    @commands.command(name='stop')
     async def stop(self, ctx: Context):
         """
         Stop the audio
@@ -152,7 +152,7 @@ class Stream(commands.Cog):
         else:
             logger.info("No audio to stop")
 
-    @commands.command(name='reset', pass_context=True)
+    @commands.command(name='reset')
     async def reset(self, ctx: Context):
         """
         Reset the bot by stopping and removing mp3 file and leaving the bot from this current channel

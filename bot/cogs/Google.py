@@ -13,7 +13,7 @@ class Google(commands.Cog):
         # init the Google API translator
         self.translator = Translator()
 
-    @commands.command(name='google', pass_context=True)
+    @commands.command(name='google')
     async def google_search(self, ctx: Context, *, entry: str):
         """
         From a given entry return a simple search from google
