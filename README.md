@@ -17,15 +17,32 @@ DISCORD_TOKEN = VOTRE_TOKEN_DISCORD_ICI
 ADMIN_ID = VOTRE_ID_DISCORD_ADMIN
 ```
 
-### 3. Lancement avec Docker Compose (recommandé)
+### 3. Lancement avec Docker Compose (développement local)
 ```bash
-docker-compose up -d
+docker-compose up -d --build  # Build local tamikabot:latest
 ```
 
-### 4. Lancement avec Docker (manuel)
+### 4. Docker Hub (push des changements)
 ```bash
-docker build -t leersma/tamikabot:latest .
-docker run -e DISCORD_TOKEN='VOTRE_TOKEN' -e ADMIN_ID='VOTRE_ID' -v ./bot/db/:/opt/app/bot/db/ leersma/tamikabot:latest
+# Après avoir testé en local, push sur Docker Hub
+docker build -t tamikabot:latest .
+docker tag tamikabot:latest leersma/tamikabot:latest
+docker push leersma/tamikabot:latest
+```
+
+### 5. Lancement avec Docker (production VPS)
+```bash
+# Sur VPS : pull et lancement avec l'image Docker Hub
+docker pull leersma/tamikabot:latest
+docker run -d --name tamikabot --restart unless-stopped \
+  -e DISCORD_TOKEN='VOTRE_TOKEN' \
+  -e ADMIN_ID='VOTRE_ID' \
+  -v /opt/tamikabot/db:/opt/app/bot/db \
+  leersma/tamikabot:latest
+
+# Manuel (local pour tests)
+docker build -t tamikabot:latest .
+docker run -e DISCORD_TOKEN='VOTRE_TOKEN' -e ADMIN_ID='VOTRE_ID' -v ./bot/db/:/opt/app/bot/db/ tamikabot:latest
 ```
 
 ## Commandes disponibles
@@ -68,14 +85,20 @@ Activer dans le [portail développeur Discord](https://discord.com/developers/ap
 ## Tests
 
 ```bash
-# Via Docker (recommandé)
+# Via Docker (build local)
+docker build -t tamikabot:latest .
+docker run --rm tamikabot:latest -m pytest tests/ -v
+
+# Via Docker Hub (version publiée)
 docker run --rm leersma/tamikabot:latest -m pytest tests/ -v
 
 # En local
 python -m pytest tests/ -v
 ```
 
-Les tests couvrent tous les Cogs (sauf Stream) et la configuration du bot.
+**Note** : `tamikabot:latest` est le build local (derniers changements). `leersma/tamikabot:latest` est l'image Docker Hub (version publiée).
+
+Les tests couvrent tous les Cogs (y compris Stream) et la configuration du bot.
 
 ## Documentation
 

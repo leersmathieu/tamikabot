@@ -1,23 +1,45 @@
 # Déploiement
 
-## Docker (recommandé)
+## Docker Hub (push des changements)
 
 ```bash
-# Build de l'image
-docker build -t leersma/tamikabot:latest .
+# 1. Build local avec les derniers changements
+docker build -t tamikabot:latest .
 
-# Lancement
-docker run -e DISCORD_TOKEN='votre_token_ici' -v ./bot/db/:/opt/app/bot/db/ leersma/tamikabot:latest
+# 2. Tag pour Docker Hub
+docker tag tamikabot:latest leersma/tamikabot:latest
+
+# 3. Push sur Docker Hub
+docker push leersma/tamikabot:latest
+
+# 4. Vérifier sur Docker Hub
+# https://hub.docker.com/r/leersma/tamikabot
 ```
 
-## Docker Compose (recommandé)
+## Docker (VPS - production)
 
 ```bash
-# Build de l'image
-docker build -t leersma/tamikabot:latest .
+# Sur le VPS : pull et lancement avec l'image Docker Hub
+docker pull leersma/tamikabot:latest
+docker run -d --name tamikabot --restart unless-stopped \
+  -e DISCORD_TOKEN='votre_token_ici' \
+  -e ADMIN_ID='votre_id_admin' \
+  -v /opt/tamikabot/db:/opt/app/bot/db \
+  leersma/tamikabot:latest
 
-# Lancement
-docker-compose up -d
+# Arrêt
+docker stop tamikabot
+docker rm tamikabot
+
+# Logs
+docker logs -f tamikabot
+```
+
+## Docker Compose (développement local)
+
+```bash
+# Build local et lancement
+docker-compose up -d --build
 
 # Arrêt
 docker-compose down
@@ -26,8 +48,20 @@ docker-compose down
 docker-compose logs -f
 ```
 
+### Docker Compose (local) vs Docker Hub (production)
+
+**Développement local** :
+- Utilise `docker-compose.yml` avec `build: .`
+- Crée l'image locale `tamikabot:latest`
+- Contient les derniers changements non publiés
+
+**Production VPS** :
+- Utilise l'image Docker Hub `leersma/tamikabot:latest`
+- Plus simple à déployer, pas de build nécessaire
+- Contient la dernière version publiée stable
+
 Le `docker-compose.yml` :
-- Utilise l'image `leersma/tamikabot:latest`
+- Build local `tamikabot:latest` (`build: .`)
 - Charge le token depuis le fichier `.env` via `env_file`
 - Monte `./bot/db/` pour persister la base Bank
 - Redémarre automatiquement sauf arrêt manuel (`restart: unless-stopped`)

@@ -20,7 +20,7 @@
  │   │   ├── Google.py        # Commandes $google, $translate
  │   │   ├── Joke.py          # Commandes $joke, $joke_tts
  │   │   ├── Messages.py      # Commandes $del_messages, $say
- │   │   └── Stream.py        # Commandes $play, $leave, $pause, $resume, $stop, $reset
+ │   │   └── Stream.py        # Commandes $play, $skip, $queue, $leave, $pause, $resume, $stop, $reset
  │   └── db/
  │       ├── filename.pickle  # Base de données Bank (DataFrame pandas sérialisé)
  │       └── joke.csv         # Base de blagues encodées en base64
@@ -31,7 +31,8 @@
  │   ├── test_bot.py          # Tests Config et Bot (intents, prefix)
  │   ├── test_google.py       # Tests Google cog
  │   ├── test_joke.py         # Tests Joke cog
- │   └── test_messages.py     # Tests Messages cog
+ │   ├── test_messages.py     # Tests Messages cog
+ │   └── test_stream.py       # Tests Stream cog
  └── script/
      └── create_pandas_df.py  # Script pour initialiser le fichier pickle de la Bank
 ```

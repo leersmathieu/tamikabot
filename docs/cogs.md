@@ -58,17 +58,19 @@ Système de monnaie virtuelle persisté dans un fichier pickle (`bot/db/filename
 
 ## Stream (`bot/cogs/Stream.py`)
 
-Lecteur audio en vocal via YouTube.
+Lecteur audio en streaming depuis YouTube avec système de queue.
 
 | Commande | Usage | Description |
 |---|---|---|
-| `$play <url>` | `$play https://youtube.com/...` | Télécharge et joue un audio YouTube |
-| `$leave` | `$leave` | Déconnecte le bot du salon vocal |
+| `$play <url ou recherche>` | `$play https://youtube.com/...` ou `$play lofi chill` | Streame un audio YouTube (URL ou recherche par mots-clés). Ajoute à la queue si déjà en lecture. |
+| `$skip` | `$skip` | Passe à la chanson suivante dans la queue |
+| `$queue` | `$queue` | Affiche la chanson en cours et la queue de lecture |
+| `$leave` | `$leave` | Déconnecte le bot du salon vocal et vide la queue |
 | `$pause` | `$pause` | Met l'audio en pause |
 | `$resume` | `$resume` | Reprend l'audio |
-| `$stop` | `$stop` | Arrête l'audio |
-| `$reset` | `$reset` | Stop + supprime les fichiers mp3 + quitte le vocal |
+| `$stop` | `$stop` | Arrête l'audio et vide la queue |
+| `$reset` | `$reset` | Stop + vide la queue + quitte le vocal |
 
 **Dépendances** : `yt-dlp`, `PyNaCl`, `ffmpeg` (installé dans le Dockerfile)
 
-**Fonctionnement** : Le fichier audio est téléchargé en mp3, renommé `song.mp3`, puis lu avec `FFmpegPCMAudio`.
+**Fonctionnement** : L'URL audio est extraite via `yt-dlp` (sans téléchargement) puis streamée directement avec `FFmpegPCMAudio` et des options de reconnexion automatique. Un système de queue par guild permet d'enchaîner les morceaux automatiquement.

@@ -52,22 +52,22 @@ class Bot(commands.Bot):
         logger.info("Running bot with token")
         super(Bot, self).run(self.token)
 
-    async def on_message(self, message):
-        """
-        Triggered when a message is send on any channel/server that the
-        bot have access.
-        """
+    # async def on_message(self, message):
+    #     """
+    #     Triggered when a message is send on any channel/server that the
+    #     bot have access.
+    #     """
 
-        # Don't respond to ourselves
-        if message.author == self.user:
-            return
+    #     # Don't respond to ourselves
+    #     if message.author == self.user:
+    #         return
 
-        # Don't respond to any bot
-        if message.author.bot:
-            return
+    #     # Don't respond to any bot
+    #     if message.author.bot:
+    #         return
 
-        channel_name = getattr(message.channel, 'name', 'DM')
-        logger.info(f"Message from {message.author.name} in {channel_name}: {message.content}")
+    #     channel_name = getattr(message.channel, 'name', 'DM')
+    #     logger.info(f"Message from {message.author.name} in {channel_name}: {message.content}")
 
-        # Process commands
-        await self.process_commands(message)
+    #     # Process commands
+    #     await self.process_commands(message)

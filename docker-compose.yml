@@ -1,13 +1,13 @@
 services:
   tamikabot:
-    image: leersma/tamikabot:latest
+    build: .
+    image: tamikabot:latest
     # restart: unless-stopped
     privileged: true
     ulimits:
       nproc: 65535
     environment:
       - PYTHONUNBUFFERED=1
-      - ASYNCIO_THREADPOOL_SIZE=0
     volumes:
       - ./bot/db/:/opt/app/bot/db/
     env_file:

@@ -112,6 +112,102 @@ Un système qui track l'activité vocale et textuelle des membres :
  
 **Intérêt** : Donne de la vie au serveur, encourage l'activité, et c'est le type de feature que les bots publics font payer en premium.
  
+---
+
+### 3. Système de paris entre membres
+
+Un mini-jeu de paris entre utilisateurs du serveur :
+```
+$bet @user 100 Je finis avant toi
+$bet accept
+$bet winner @user
+```
+
+**Fonctionnement** :
+- Un membre crée un pari avec une mise en coins (lié à la Bank)
+- L'autre membre accepte ou refuse
+- Un admin ou les deux joueurs désignent le gagnant
+- Les coins sont transférés automatiquement
+
+**Intérêt** : Crée de l'interaction sociale, réutilise le système Bank existant, très fun en vocal pendant les games.
+
+---
+
+### 4. Soundboard — Sons courts en vocal
+
+Une soundboard pour jouer des sons courts (airhorn, sad trombone, applause…) :
+```
+$sb airhorn
+$sb list
+$sb add nom_du_son <attachment>
+```
+
+**Fonctionnement** :
+- Fichiers audio courts stockés dans `bot/sounds/`
+- Le bot rejoint le vocal, joue le son, et se déconnecte (ou reste si de la musique tourne)
+- Les membres peuvent ajouter leurs propres sons (avec une limite de durée ~5s)
+
+**Intérêt** : Feature classique des bots fun, très utilisée en vocal pendant les sessions de jeu. Complémentaire au Stream cog.
+
+---
+
+### 5. Système de roulette / Mini-casino
+
+Des mini-jeux de casino utilisant les coins de la Bank :
+```
+$roulette 50 red
+$slots 100
+$coinflip 200
+$daily
+```
+
+**Fonctionnement** :
+- `$roulette` : mise sur rouge/noir/numéro, multiplicateur classique
+- `$slots` : machine à sous avec emojis, combinaisons gagnantes
+- `$coinflip` : pile ou face, x2 la mise
+- `$daily` : bonus quotidien de coins pour encourager l'activité
+
+**Intérêt** : Donne un vrai usage aux coins de la Bank, très addictif, facile à implémenter. Pas de dépendance externe (juste `random`).
+
+---
+
+### 6. Système de citations / Quotes
+
+Sauvegarder les meilleures citations du serveur :
+```
+$quote add @user "Je suis pas bourré, je suis juste fatigué horizontalement"
+$quote random
+$quote list @user
+$quote top
+```
+
+**Fonctionnement** :
+- Stockage dans SQLite (auteur, citation, date, nombre de likes)
+- `$quote random` pour ressortir une pépite au hasard
+- Réaction 👍 pour voter sur les citations
+- `$quote top` pour le hall of fame
+
+**Intérêt** : Feature très communautaire, crée des inside jokes, donne envie de revenir sur le serveur. Zéro dépendance externe.
+
+---
+
+### 7. Polls avancés avec réactions
+
+Un système de sondages interactifs :
+```
+$poll "On joue à quoi ce soir ?" "Valorant" "CS2" "Rocket League" "Rien je suis claqué"
+```
+
+**Fonctionnement** :
+- Le bot crée un embed avec les options numérotées
+- Ajoute automatiquement les réactions 1️⃣ 2️⃣ 3️⃣ 4️⃣
+- Timer optionnel (`$poll 30m "Question" ...`) avec résultat automatique
+- Affiche les résultats en pourcentage à la fin
+
+**Intérêt** : Remplace les sondages manuels, visuellement propre avec les embeds, utile au quotidien.
+
+---
+
  # Points d'attention
 
 - **googletrans 4.0.0rc1** est une version release candidate qui peut être instable car elle dépend de l'API non officielle de Google Translate.
