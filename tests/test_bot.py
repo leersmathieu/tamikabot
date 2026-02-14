@@ -32,3 +32,25 @@ def test_bot_has_correct_prefix():
         from bot.bot import Bot
         bot = Bot()
         assert bot.command_prefix == '$'
+
+
+def test_bot_cogs_registry():
+    """Test that Bot.COGS contains all expected cogs."""
+    with patch.dict('os.environ', {'DISCORD_TOKEN': 'fake-token'}):
+        from bot.bot import Bot
+        expected = {'Messages', 'Google', 'Joke', 'Art', 'Bank', 'Stream', 'Lfg'}
+        assert set(Bot.COGS.keys()) == expected
+
+
+def test_disabled_cogs_parsing():
+    """Test that DISABLED_COGS env var is parsed correctly."""
+    with patch.dict('os.environ', {'DISCORD_TOKEN': 'fake-token', 'DISABLED_COGS': 'Stream,Lfg'}):
+        import importlib
+        import bot.bot as bot_module
+        importlib.reload(bot_module)
+        assert 'Stream' in bot_module.DISABLED_COGS
+        assert 'Lfg' in bot_module.DISABLED_COGS
+    # Reload with empty to reset state
+    with patch.dict('os.environ', {'DISCORD_TOKEN': 'fake-token', 'DISABLED_COGS': ''}):
+        importlib.reload(bot_module)
+        assert bot_module.DISABLED_COGS == []

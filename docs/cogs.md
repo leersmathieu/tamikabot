@@ -56,6 +56,24 @@ Système de monnaie virtuelle persisté dans un fichier pickle (`bot/db/filename
 
 ---
 
+## Lfg (`bot/cogs/Lfg.py`)
+
+Système de recherche de groupe (Looking For Group) conçu spécifiquement pour le serveur **Payday2France** Discord.
+
+| Commande | Usage | Description |
+|---|---|---|
+| `$recherche` | `$recherche` | Envoie un message LFG aléatoire mentionnant l'auteur et le rôle configuré |
+
+**Restriction** : L'auteur doit posséder le rôle `Recherche joueurs` sur le serveur.
+
+**Cooldown** : 45 minutes (global) pour éviter le spam.
+
+**Phrases** : Les messages sont définis dans `bot/lfg_sentences.py` — chaque phrase contient un placeholder `{}` remplacé par la mention de l'auteur.
+
+> **Note** : Ce cog est optimisé pour le serveur Payday2France. Les phrases et le rôle `Recherche joueurs` sont spécifiques à ce serveur.
+
+---
+
 ## Stream (`bot/cogs/Stream.py`)
 
 Lecteur audio en streaming depuis YouTube avec système de queue.

@@ -17,32 +17,21 @@ DISCORD_TOKEN = VOTRE_TOKEN_DISCORD_ICI
 ADMIN_ID = VOTRE_ID_DISCORD_ADMIN
 ```
 
-### 3. Lancement avec Docker Compose (développement local)
+### 3. Lancement (développement local)
 ```bash
-docker-compose up -d --build  # Build local tamikabot:latest
+docker build -t tamikabot:latest .
+docker-compose up -d
 ```
 
-### 4. Docker Hub (push des changements)
+### 4. Déploiement (production VPS)
 ```bash
-# Après avoir testé en local, push sur Docker Hub
-docker build -t tamikabot:latest .
+# Push sur Docker Hub
 docker tag tamikabot:latest leersma/tamikabot:latest
 docker push leersma/tamikabot:latest
-```
 
-### 5. Lancement avec Docker (production VPS)
-```bash
-# Sur VPS : pull et lancement avec l'image Docker Hub
-docker pull leersma/tamikabot:latest
-docker run -d --name tamikabot --restart unless-stopped \
-  -e DISCORD_TOKEN='VOTRE_TOKEN' \
-  -e ADMIN_ID='VOTRE_ID' \
-  -v /opt/tamikabot/db:/opt/app/bot/db \
-  leersma/tamikabot:latest
-
-# Manuel (local pour tests)
-docker build -t tamikabot:latest .
-docker run -e DISCORD_TOKEN='VOTRE_TOKEN' -e ADMIN_ID='VOTRE_ID' -v ./bot/db/:/opt/app/bot/db/ tamikabot:latest
+# Sur le VPS
+docker-compose -f docker-compose.prod.yml pull
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
 ## Commandes disponibles
@@ -62,6 +51,9 @@ docker run -e DISCORD_TOKEN='VOTRE_TOKEN' -e ADMIN_ID='VOTRE_ID' -v ./bot/db/:/o
 - `$joke` — Envoie une blague aléatoire
 - `$joke_tts` — Blague avec text-to-speech
 
+### Lfg (Payday2France)
+- `$recherche` — Envoie un message LFG aléatoire (nécessite le rôle « Recherche joueurs »)
+
 ### Messages
 - `$del_messages <N>` — Supprime N messages (requiert `manage_messages`)
 - `$say <channel_id> <texte>` — Envoie un message (admin `ADMIN_ID`)
@@ -77,6 +69,7 @@ docker run -e DISCORD_TOKEN='VOTRE_TOKEN' -e ADMIN_ID='VOTRE_ID' -v ./bot/db/:/o
 |---|---|---|
 | `DISCORD_TOKEN` | Token d'authentification du bot | Oui |
 | `ADMIN_ID` | ID Discord de l'admin (commandes sensibles) | Oui |
+| `DISABLED_COGS` | Cogs à désactiver, séparés par des virgules (ex: `Stream,Lfg`) | Non |
 
 ### Intents Discord
 Activer dans le [portail développeur Discord](https://discord.com/developers/applications) → Bot → Privileged Gateway Intents :
@@ -98,7 +91,7 @@ python -m pytest tests/ -v
 
 **Note** : `tamikabot:latest` est le build local (derniers changements). `leersma/tamikabot:latest` est l'image Docker Hub (version publiée).
 
-Les tests couvrent tous les Cogs (y compris Stream) et la configuration du bot.
+Les tests couvrent tous les Cogs (Art, Bank, Google, Joke, Lfg, Messages, Stream) et la configuration du bot (46 tests). Le cog Lfg est spécifique au serveur Payday2France.
 
 ## Documentation
 
@@ -129,7 +122,8 @@ python main.py
 
 ## Historique
 
-- **v2.x** : Migration vers `discord.py` 2.4.0, Intents, tests unitaires, documentation découpée, suppression LFG, configuration `ADMIN_ID`
+- **v3.x** : Réintégration du cog LFG (Payday2France), désactivation de Cogs via `DISABLED_COGS`, streaming YouTube avec PO Token, Python 3.12, `discord.py` 2.6.4
+- **v2.x** : Migration vers `discord.py` 2.4.0, Intents, tests unitaires, documentation découpée, configuration `ADMIN_ID`
 - **v1.x** : Version initiale Python (migration depuis Node.js)
 
 ## Node.js Version

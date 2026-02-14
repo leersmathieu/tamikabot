@@ -5,3 +5,4 @@ from .Joke import Joke
 from .Art import Art
 from .Bank import Bank
 from .Stream import Stream
+from .Lfg import Lfg

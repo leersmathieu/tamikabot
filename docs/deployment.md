@@ -61,8 +61,11 @@ docker-compose logs -f
 ## Docker Compose (développement local)
 
 ```bash
-# Build local et lancement
-docker-compose up -d --build
+# Build l'image manuellement
+docker build -t tamikabot:latest .
+
+# Lancement
+docker-compose up -d
 
 # Arrêt
 docker-compose down
@@ -71,24 +74,27 @@ docker-compose down
 docker-compose logs -f
 ```
 
-### Docker Compose (local) vs Docker Hub (production)
+### Local vs Production
 
-**Développement local** :
-- Utilise `docker-compose.yml` avec `build: .`
-- Crée l'image locale `tamikabot:latest`
-- Contient les derniers changements non publiés
+| | Développement local | Production VPS |
+|---|---|---|
+| **Fichier** | `docker-compose.yml` | `docker-compose.prod.yml` |
+| **Image** | `tamikabot:latest` (build local) | `leersma/tamikabot:latest` (Docker Hub) |
+| **Build** | Manuel (`docker build`) | Aucun (pull depuis Docker Hub) |
 
-**Production VPS** :
-- Utilise l'image Docker Hub `leersma/tamikabot:latest`
-- Plus simple à déployer, pas de build nécessaire
-- Contient la dernière version publiée stable
+Les deux fichiers incluent le service `bgutil-provider` pour l'authentification YouTube (PO Token).
 
-Le `docker-compose.yml` :
-- Build local `tamikabot:latest` (`build: .`)
-- Charge le token depuis le fichier `.env` via `env_file`
-- Monte `./bot/db/` pour persister la base Bank
-- Monte `./cookies.txt` pour l'authentification YouTube
-- Redémarre automatiquement sauf arrêt manuel (`restart: unless-stopped`)
+## Désactivation de Cogs
+
+Pour désactiver un ou plusieurs Cogs (par exemple Stream en production), ajouter dans le `.env` :
+
+```
+DISABLED_COGS=Stream
+```
+
+Voir `docs/configuration.md` pour plus de détails.
+
+> **Note** : Le cog Lfg est spécifique au serveur Payday2France. Si vous l'utilisez sur un autre serveur, vous devrez adapter le rôle `Recherche joueurs` et les phrases dans `bot/lfg_sentences.py`.
 
 ## Authentification YouTube (yt-dlp)
 

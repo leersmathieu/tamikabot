@@ -1,15 +1,10 @@
 # Tests
 
-Les tests unitaires couvrent tous les Cogs (y compris Stream) et la configuration du bot.
+Les tests unitaires couvrent tous les Cogs (Art, Bank, Google, Joke, Lfg, Messages, Stream) et la configuration du bot (46 tests). Le cog Lfg est spécifique au serveur Payday2France.
 
 ```bash
 # Via Docker (build local)
 docker build -t tamikabot:latest .
-docker run --rm tamikabot:latest -m pytest tests/ -v
-
-# Via Docker Compose (build local)
-docker-compose down
-docker-compose up -d --build
 docker run --rm tamikabot:latest -m pytest tests/ -v
 
 # Via Docker Hub (version publiée)
