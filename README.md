@@ -1,6 +1,6 @@
 # TamikaBot
 
-Bot Discord personnel écrit en Python avec `discord.py` (v2.4.0). Architecture modulaire via Cogs, conteneurisé avec Docker.
+Bot Discord personnel écrit en Python avec `discord.py` (v2.6.4). Architecture modulaire via Cogs, conteneurisé avec Docker.
 
 ## Démarrage rapide
 
@@ -116,7 +116,7 @@ La documentation technique a été découpée en plusieurs fichiers dans `docs/`
 ## Développement
 
 ### Prérequis locaux
-- Python 3.9+
+- Python 3.10+
 - ffmpeg (dans le PATH pour la musique)
 
 ### Installation locale

@@ -109,3 +109,6 @@ dist
 venv/
 bot/cogs/__pycache__/
 .ipynb_checkpoints
+
+# YouTube cookies (données sensibles)
+cookies.txt

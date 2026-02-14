@@ -1,4 +1,6 @@
 import asyncio
+import shutil
+import os
 import discord
 from discord import VoiceClient, ClientException
 from discord.ext import commands
@@ -13,18 +15,35 @@ logger = logging.getLogger(__name__)
 
 # Options yt-dlp : extraction d'URL uniquement, pas de téléchargement
 YDL_OPTIONS = {
-    'format': 'bestaudio/best',
+    'format': 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio/best',
     'noplaylist': True,
     'quiet': True,
     'no_warnings': True,
     'default_search': 'ytsearch',
+    'cookiefile': '/tmp/cookies.txt',
+    'socket_timeout': 30,
+    'retries': 3,
+    'sleep_interval_requests': 1,  # 1s entre chaque requête HTTP vers YouTube
+    'extractor_args': {
+        'youtubepot-bgutilhttp': {
+            'base_url': ['http://bgutil-provider:4416'],
+        },
+    },
 }
 
-# Options FFmpeg pour le streaming direct avec reconnexion automatique
+# Options FFmpeg pour le streaming direct avec reconnexion limitée
 FFMPEG_OPTIONS = {
-    'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+    'before_options': (
+        '-reconnect 1 -reconnect_streamed 1'
+        ' -reconnect_delay_max 30'   # Attendre jusqu'à 30s entre les tentatives
+        ' -reconnect_on_network_error 1'
+        ' -reconnect_on_http_error 4xx,5xx'
+    ),
     'options': '-vn',
 }
+
+# Délai entre les chansons pour éviter le spam YouTube (secondes)
+QUEUE_DELAY = 2
 
 
 class SongInfo:
@@ -48,13 +67,29 @@ class SongInfo:
 class Stream(commands.Cog):
     """Cog de lecture audio en streaming depuis YouTube (sans téléchargement de fichiers)."""
 
+    COOKIES_SRC = '/opt/app/cookies.txt'
+    COOKIES_DST = '/tmp/cookies.txt'
+
     def __init__(self, bot):
         self.bot = bot
         # Queue par guild (guild_id -> deque de SongInfo)
         self.queues: dict[int, deque[SongInfo]] = {}
         # Chanson en cours par guild
         self.current: dict[int, Optional[SongInfo]] = {}
+        # Copier les cookies montés en read-only vers /tmp pour que yt-dlp puisse y écrire
+        self._copy_cookies()
         logger.info("Stream Cog initialized")
+
+    @staticmethod
+    def _copy_cookies():
+        """Copie le fichier cookies source (read-only) vers /tmp pour yt-dlp."""
+        src = Stream.COOKIES_SRC
+        dst = Stream.COOKIES_DST
+        if os.path.isfile(src):
+            shutil.copy2(src, dst)
+            logger.info(f"Cookies copied from {src} to {dst}")
+        else:
+            logger.warning(f"Cookies file not found at {src} — YouTube may block requests")
 
     # ── Helpers ──────────────────────────────────────────────────────
 
@@ -80,9 +115,15 @@ class Stream(commands.Cog):
         if queue:
             next_song = queue.popleft()
             self.current[guild_id] = next_song
-            source = discord.FFmpegPCMAudio(next_song.source_url, **FFMPEG_OPTIONS)
-            voice.play(source, after=lambda e: self._play_next(guild_id, voice))
-            logger.info(f"Playing next in queue: {next_song.title}")
+
+            async def _delayed_play():
+                await asyncio.sleep(QUEUE_DELAY)  # Délai anti-spam YouTube
+                if voice.is_connected():
+                    source = discord.FFmpegPCMAudio(next_song.source_url, **FFMPEG_OPTIONS)
+                    voice.play(source, after=lambda e: self._play_next(guild_id, voice))
+                    logger.info(f"Playing next in queue: {next_song.title}")
+
+            asyncio.run_coroutine_threadsafe(_delayed_play(), self.bot.loop)
         else:
             self.current.pop(guild_id, None)
             self.queues.pop(guild_id, None)
@@ -92,6 +133,7 @@ class Stream(commands.Cog):
     # ── Commandes ────────────────────────────────────────────────────
 
     @commands.command(name='play')
+    @commands.cooldown(1, 5, commands.BucketType.guild)  # 1 commande par 5 secondes par serveur
     async def play(self, ctx: Context, *, query: str):
         """
         Joue un audio YouTube en streaming. Accepte une URL ou des mots-clés de recherche.
@@ -258,3 +300,14 @@ class Stream(commands.Cog):
             await ctx.send("🔄 Reset complete.")
         else:
             await ctx.send("Not connected")
+
+    # ── Gestionnaire d'erreurs ─────────────────────────────────────────────
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx: Context, error):
+        """Gère les erreurs de cooldown."""
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(f"⏱️ Attends {error.retry_after:.1f}s avant de réutiliser cette commande.")
+        else:
+            # Laisser les autres erreurs se propager
+            raise error

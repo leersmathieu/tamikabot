@@ -7,7 +7,7 @@ services:
       - "4416:4416"
 
   tamikabot:
-    image: tamikabot:latest
+    image: leersma/tamikabot:latest
     # restart: unless-stopped
     privileged: true
     ulimits:

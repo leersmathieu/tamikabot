@@ -331,16 +331,24 @@ async def test_reset_when_not_connected(stream_cog, voice_ctx):
 
 @patch('discord.FFmpegPCMAudio')
 def test_play_next_with_queue(mock_ffmpeg, stream_cog, fake_song):
-    """Test that _play_next plays the next song from queue."""
+    """Test that _play_next schedules the next song from queue with delay."""
     guild_id = 123456
     stream_cog.queues[guild_id] = deque([fake_song])
+    stream_cog.bot.loop = MagicMock()
     mock_voice = MagicMock()
 
-    stream_cog._play_next(guild_id, mock_voice)
+    original = asyncio.run_coroutine_threadsafe
+    mock_run_coro = MagicMock()
+    asyncio.run_coroutine_threadsafe = mock_run_coro
 
-    mock_voice.play.assert_called_once()
+    try:
+        stream_cog._play_next(guild_id, mock_voice)
+    finally:
+        asyncio.run_coroutine_threadsafe = original
+
     assert stream_cog.current[guild_id] == fake_song
     assert len(stream_cog.queues[guild_id]) == 0
+    mock_run_coro.assert_called_once()
 
 
 @patch('discord.FFmpegPCMAudio')

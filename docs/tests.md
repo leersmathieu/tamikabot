@@ -15,7 +15,7 @@ docker run --rm tamikabot:latest -m pytest tests/ -v
 # Via Docker Hub (version publiée)
 docker run --rm leersma/tamikabot:latest -m pytest tests/ -v
 
-# En local (Python 3.9+)
+# En local (Python 3.10+)
 python -m pytest tests/ -v
 ```
 
