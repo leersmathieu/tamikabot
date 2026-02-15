@@ -16,7 +16,7 @@ class Google(commands.Cog):
     @commands.command(name='google')
     async def google_search(self, ctx: Context, *, entry: str):
         """
-        From a given entry return a simple search from google
+        Effectue une recherche Google à partir d'une requête
         """
         # Note for *, it tells the library to put everything
         # the user types after it into message as a string.
@@ -31,7 +31,7 @@ class Google(commands.Cog):
     @commands.command(name='translate')
     async def translate(self, ctx: Context, language: str, *, sentences: str):
         """
-        Translate a given text to a given language
+        Traduit un texte vers une langue donnée
         """
         translator = self.translator
         translation = translator.translate(sentences, dest=language)

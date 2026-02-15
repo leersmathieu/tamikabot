@@ -16,7 +16,7 @@ class Art(commands.Cog):
     @commands.command(name='ascii')
     async def ascii(self, ctx: Context, *, sentences: str):
         """
-        Transform a given sentence by ascii art
+        Transforme une phrase en art ASCII
         """
         art_1 = text2art(str(sentences),str(random.choice(list_type_ascii)))
         await ctx.send(f"```{art_1}```")

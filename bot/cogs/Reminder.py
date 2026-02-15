@@ -85,7 +85,7 @@ class Reminder(commands.Cog):
 
     @commands.command(name='remind')
     async def remind(self, ctx: Context, time_str: str, *, message: str):
-        """Create a reminder. Usage: $remind 30m Message here"""
+        """Crée un rappel. Usage: $remind 30m Message ici"""
         seconds = self.parse_time(time_str)
         
         if seconds is None:
@@ -132,7 +132,7 @@ class Reminder(commands.Cog):
 
     @commands.command(name='reminders')
     async def list_reminders(self, ctx: Context):
-        """List all your active reminders."""
+        """Liste tous tes rappels actifs."""
         user_id = str(ctx.author.id)
         reminders = self.db.get_user_reminders(user_id)
         
@@ -173,7 +173,7 @@ class Reminder(commands.Cog):
 
     @commands.command(name='remind_cancel')
     async def cancel_reminder(self, ctx: Context, reminder_id: int):
-        """Cancel a reminder by ID. Usage: $remind_cancel 1"""
+        """Annule un rappel par son ID. Usage: $remind_cancel 1"""
         user_id = str(ctx.author.id)
         
         if self.db.delete_reminder(reminder_id, user_id):

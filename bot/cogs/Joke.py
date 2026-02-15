@@ -19,7 +19,7 @@ class Joke(commands.Cog):
     @commands.command(name='joke')
     async def say_joke(self, ctx: Context):
         """
-        The bot say a random joke
+        Le bot raconte une blague aléatoire
         """
         logger.info("requesting joke")
         jokes = self._load_jokes()
@@ -30,7 +30,7 @@ class Joke(commands.Cog):
     @commands.command(name='joke_tts')
     async def say_joke_tts(self, ctx: Context):
         """
-        The bot say a random joke with text to speech active
+        Le bot raconte une blague aléatoire avec synthèse vocale
         """
         jokes = self._load_jokes()
         joke_encoded = random.choice(jokes)

@@ -21,7 +21,7 @@ class Bank(commands.Cog):
     @commands.command(name='add_coins')
     async def add_coins(self, ctx: Context, user: str, amount: int):
         """
-        Add ( or remove if negative number ) a given amount of coins for the given user
+        Ajoute (ou retire si nombre négatif) un montant de coins à un utilisateur
         """
         user_id = str(re.findall(r'\b\d+\b', user)[0])
         user_mention = await self.bot.fetch_user(int(user_id))
@@ -40,7 +40,7 @@ class Bank(commands.Cog):
     @commands.command(name='bank')
     async def bank(self, ctx: Context):
         """
-        See your bank account
+        Consulte ton compte en banque
         """
         user_id = str(ctx.author.id)
         balance = self.db.get_balance(user_id)

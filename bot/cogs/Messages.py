@@ -14,7 +14,7 @@ class Messages(commands.Cog):
     @commands.command(name='del_messages')
     async def delete_messages(self, ctx: Context, number_of_messages: int):
         """
-        Delete X messages from the current channel
+        Supprime X messages du salon actuel
         """
         if ctx.message.author.guild_permissions.manage_messages:
             messages = [m async for m in ctx.channel.history(limit=number_of_messages + 1)]
@@ -28,7 +28,7 @@ class Messages(commands.Cog):
     @commands.command(name='say')
     async def say(self, ctx: Context, chan_id: int, *, text: str):
         """
-        The bot say a given message to a given channel
+        Le bot envoie un message dans un salon donné
         """
         # Don't respond to ourselves
         if ctx.message.author == self.bot.user:

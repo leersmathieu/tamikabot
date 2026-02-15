@@ -147,7 +147,7 @@ class Stream(commands.Cog):
         logger.info(f"Received play command with query: {query}")
 
         if not ctx.author.voice:
-            await ctx.send("You are not connected to a voice channel.")
+            await ctx.send("Tu n'es pas connecté à un salon vocal.")
             return
 
         voice_channel = ctx.author.voice.channel
@@ -185,7 +185,7 @@ class Stream(commands.Cog):
             return
 
         if info is None:
-            await ctx.send("No results found.")
+            await ctx.send("Aucun résultat trouvé.")
             return
 
         song = SongInfo.from_ytdlp(info)
@@ -214,9 +214,9 @@ class Stream(commands.Cog):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_playing():
             voice.stop()  # Déclenche le callback _play_next
-            await ctx.send("⏭ Skipped.")
+            await ctx.send("⏭ Chanson passée.")
         else:
-            await ctx.send("Nothing is playing.")
+            await ctx.send("Rien n'est en cours de lecture.")
 
     @commands.command(name='queue')
     async def queue(self, ctx: Context):
@@ -226,12 +226,12 @@ class Stream(commands.Cog):
         queue = self._get_queue(guild_id)
 
         if not current and not queue:
-            await ctx.send("Queue is empty.")
+            await ctx.send("La queue est vide.")
             return
 
         lines = []
         if current:
-            lines.append(f"🎵 **Now playing:** {current.title}")
+            lines.append(f"🎵 **En cours:** {current.title}")
         for i, song in enumerate(queue, start=1):
             lines.append(f"`{i}.` {song.title}")
 
@@ -251,7 +251,7 @@ class Stream(commands.Cog):
             await voice.disconnect()
             logger.info("Disconnected from voice channel")
         else:
-            await ctx.send("Not connected")
+            await ctx.send("Non connecté")
 
     @commands.command(name='pause')
     async def pause(self, ctx: Context):
@@ -260,9 +260,9 @@ class Stream(commands.Cog):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_playing():
             voice.pause()
-            await ctx.send("⏸ Paused.")
+            await ctx.send("⏸ En pause.")
         else:
-            await ctx.send("No audio is playing")
+            await ctx.send("Aucun audio en cours de lecture")
 
     @commands.command(name='resume')
     async def resume(self, ctx: Context):
@@ -271,9 +271,9 @@ class Stream(commands.Cog):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice and voice.is_paused():
             voice.resume()
-            await ctx.send("▶ Resumed.")
+            await ctx.send("▶ Repris.")
         else:
-            await ctx.send("Audio not paused")
+            await ctx.send("L'audio n'est pas en pause")
 
     @commands.command(name='stop')
     async def stop(self, ctx: Context):
@@ -285,9 +285,9 @@ class Stream(commands.Cog):
             self.queues.pop(guild_id, None)
             self.current.pop(guild_id, None)
             voice.stop()
-            await ctx.send("⏹ Stopped.")
+            await ctx.send("⏹ Arrêté.")
         else:
-            await ctx.send("Not connected")
+            await ctx.send("Non connecté")
 
     @commands.command(name='reset')
     async def reset(self, ctx: Context):
@@ -302,9 +302,9 @@ class Stream(commands.Cog):
             voice.cleanup()
             await voice.disconnect()
             logger.info("Reset complete")
-            await ctx.send("🔄 Reset complete.")
+            await ctx.send("🔄 Réinitialisation terminée.")
         else:
-            await ctx.send("Not connected")
+            await ctx.send("Non connecté")
 
     # ── Gestionnaire d'erreurs ─────────────────────────────────────────────
 
