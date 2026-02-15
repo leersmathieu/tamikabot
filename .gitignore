@@ -112,6 +112,7 @@ bot/cogs/__pycache__/
 
 # Bank database files
 bot/db/bank.db
+bot/db/reminders.db
 bot/db/filename.pickle
 
 # YouTube cookies (données sensibles)

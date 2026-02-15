@@ -2,68 +2,6 @@
  
 ## Améliorations techniques prioritaires
  
-### ~~1. Migration vers discord.py 2.x~~ ✅
-
-**Réalisé.** Migration de discord.py 1.7.3 vers 2.4.0 :
-- Intents explicites (`message_content`)
-- `add_cog()` asynchrone via `setup_hook()`
-- `pass_context=True` supprimé de toutes les commandes
-- `history().flatten()` remplacé par `[m async for m in channel.history()]`
-- Tests unitaires ajoutés (20 tests, tous passent)
-
-**Note** : Les slash commands (`/`) ne sont pas encore implémentés. Les commandes restent en prefix `$`. La migration vers les slash commands est une évolution future possible.
- 
----
- 
-### ~~2. Gestion des Intents~~ ✅
-
-**Réalisé.** Intents configurés dans `bot.py` :
-```python
-intents = discord.Intents.default()
-intents.message_content = True
-```
-**Action restante** : Activer "Message Content Intent" dans le portail développeur Discord (Bot > Privileged Gateway Intents).
- 
----
- 
-### ~~3. Remplacement du stockage pickle par SQLite~~ ✅
-
-**Réalisé.** Migration du stockage pickle/pandas vers SQLite :
-- Module `bot/db/database.py` créé avec la classe `BankDatabase`
-- Table `users(discord_id TEXT PRIMARY KEY, coins INTEGER)`
-- Transactions atomiques garanties par SQLite
-- Script de migration `script/migrate_pickle_to_sqlite.py` pour convertir les données existantes
-- Tests unitaires mis à jour (5 tests Bank, tous passent)
-- Cog Bank refactorisé pour utiliser SQLite au lieu de pickle/pandas
-- Cog Joke refactorisé pour utiliser le module `csv` standard au lieu de pandas
-- Pandas conservé dans `requirements.txt` (nécessaire pour scripts utilitaires et migration)
-
-**Bénéfices** : Plus de risque de corruption du stockage Bank, pas d'exécution de code arbitraire, lisible avec n'importe quel client SQLite, transactions atomiques garanties.
- 
----
- 
-### 4. Remplacement de googletrans
- 
-**Pourquoi** : `googletrans==4.0.0rc1` est une release candidate qui utilise l'API non officielle de Google Translate. Elle casse régulièrement quand Google change ses endpoints.
- 
-**Alternatives** :
-- **`deep-translator`** — wrapper stable multi-moteurs (Google, DeepL, MyMemory…)
-- **API DeepL gratuite** — 500k caractères/mois gratuits, bien plus fiable
- 
----
- 
-### 5. Stream cog : streaming audio sans téléchargement
- 
-**Pourquoi** : Actuellement le bot télécharge le MP3 sur disque avant de le lire. C'est lent et consomme de l'espace.
- 
-**Solution** : Utiliser `yt-dlp` pour extraire l'URL du stream audio et la passer directement à `FFmpegPCMAudio` :
-```python
-ffmpeg_opts = {'options': '-vn'}
-source = discord.FFmpegPCMAudio(stream_url, **ffmpeg_opts)
-```
-Cela supprime le temps de téléchargement et la gestion des fichiers temporaires.
- 
----
  
 ### 6. Centraliser la configuration des IDs
  
@@ -86,20 +24,17 @@ ADMIN_ID=183999045168005120
  
 ## Idées de features
  
-### 1. Système de rappels / Reminders
- 
-Un système de rappels personnels via le bot :
-```
-$remind 30m Lancer la lessive
-$remind 2h Rejoindre le raid
-```
- 
-**Fonctionnement** :
-- L'utilisateur crée un rappel avec un délai ou une heure précise
-- Le bot envoie un DM ou un message dans le canal à l'heure prévue
-- Utilisation de `discord.ext.tasks` pour les boucles de vérification ou `asyncio.sleep` pour les rappels simples
- 
-**Intérêt** : Feature utile au quotidien, simple à implémenter, pas de dépendance externe. Persistance possible avec SQLite (survit aux redémarrages).
+### ~~1. Système de rappels / Reminders~~ ✅
+
+**Réalisé.** Système de rappels personnels avec persistance SQLite :
+- Commandes : `$remind <délai> <message>`, `$reminders`, `$remind_cancel <id>`
+- Formats de délai : `30s`, `15m`, `2h`, `7d` (min: 10s, max: 30j)
+- Base de données SQLite (`bot/db/reminders.db`) avec persistance complète
+- Notifications par DM ou mention dans le canal si DMs fermés
+- Vérification automatique toutes les 30 secondes via `discord.ext.tasks`
+- Tests unitaires complets (20 tests)
+
+**Bénéfices** : Feature utile au quotidien, zéro dépendance externe, survit aux redémarrages du bot.
  
 ---
  

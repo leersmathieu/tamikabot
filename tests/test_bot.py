@@ -38,7 +38,7 @@ def test_bot_cogs_registry():
     """Test that Bot.COGS contains all expected cogs."""
     with patch.dict('os.environ', {'DISCORD_TOKEN': 'fake-token'}):
         from bot.bot import Bot
-        expected = {'Messages', 'Google', 'Joke', 'Art', 'Bank', 'Stream', 'Lfg'}
+        expected = {'Messages', 'Google', 'Joke', 'Art', 'Bank', 'Stream', 'Lfg', 'Reminder'}
         assert set(Bot.COGS.keys()) == expected
 
 

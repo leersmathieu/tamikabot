@@ -23,10 +23,12 @@
  │   │   ├── Joke.py          # Commandes $joke, $joke_tts
  │   │   ├── Lfg.py           # Commande $recherche (Looking For Group, Payday2France)
  │   │   ├── Messages.py      # Commandes $del_messages, $say
+ │   │   ├── Reminder.py      # Commandes $remind, $reminders, $remind_cancel
  │   │   └── Stream.py        # Commandes $play, $skip, $queue, $leave, $pause, $resume, $stop, $reset
  │   └── db/
- │       ├── database.py      # Module de gestion de la base de données SQLite
+ │       ├── database.py      # Module de gestion de la base de données SQLite (Bank + Reminder)
  │       ├── bank.db          # Base de données Bank (SQLite)
+ │       ├── reminders.db     # Base de données Reminders (SQLite)
  │       └── joke.csv         # Base de blagues encodées en base64
  ├── tests/                   # Tests unitaires (pytest + pytest-asyncio)
  │   ├── conftest.py          # Fixtures partagées (mock bot, mock ctx)
@@ -37,6 +39,7 @@
  │   ├── test_joke.py         # Tests Joke cog
  │   ├── test_lfg.py          # Tests Lfg cog
  │   ├── test_messages.py     # Tests Messages cog
+ │   ├── test_reminder.py     # Tests Reminder cog
  │   └── test_stream.py       # Tests Stream cog
  └── script/
      └── create_pandas_df.py  # Script pour initialiser le fichier pickle de la Bank

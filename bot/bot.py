@@ -11,6 +11,7 @@ from .cogs import Bank
 from .cogs import Stream
 from .cogs import Messages
 from .cogs import Lfg
+from .cogs import Reminder
 from .config import Config
 from .events import Events
 
@@ -36,6 +37,7 @@ class Bot(commands.Bot):
         'Bank': lambda bot: Bank(bot),
         'Stream': lambda bot: Stream(bot),
         'Lfg': lambda bot: Lfg(bot),
+        'Reminder': lambda bot: Reminder(bot),
     }
 
     def __init__(self):

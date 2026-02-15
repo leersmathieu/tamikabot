@@ -92,3 +92,31 @@ Lecteur audio en streaming depuis YouTube avec système de queue.
 **Dépendances** : `yt-dlp`, `PyNaCl`, `ffmpeg` (installé dans le Dockerfile)
 
 **Fonctionnement** : L'URL audio est extraite via `yt-dlp` (sans téléchargement) puis streamée directement avec `FFmpegPCMAudio` et des options de reconnexion automatique. Un système de queue par guild permet d'enchaîner les morceaux automatiquement.
+
+---
+
+## Reminder (`bot/cogs/Reminder.py`)
+
+Système de rappels personnels persistants avec notifications automatiques.
+
+| Commande | Usage | Description |
+|---|---|---|
+| `$remind <délai> <message>` | `$remind 30m Lancer la lessive` | Crée un rappel avec un délai (s/m/h/d) |
+| `$reminders` | `$reminders` | Liste tous vos rappels actifs |
+| `$remind_cancel <id>` | `$remind_cancel 1` | Annule un rappel par son ID |
+
+**Formats de délai** :
+- `30s` : 30 secondes
+- `15m` : 15 minutes
+- `2h` : 2 heures
+- `7d` : 7 jours
+
+**Limites** :
+- Délai minimum : 10 secondes
+- Délai maximum : 30 jours
+
+**Stockage** : Base de données SQLite (`bot/db/reminders.db`) avec persistance complète. Les rappels survivent aux redémarrages du bot.
+
+**Notifications** : Le bot tente d'envoyer un DM. Si impossible (DMs fermés), le rappel est envoyé dans le canal d'origine avec une mention.
+
+**Vérification** : Boucle automatique toutes les 30 secondes via `discord.ext.tasks`.
