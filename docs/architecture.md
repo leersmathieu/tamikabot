@@ -25,7 +25,8 @@
  │   │   ├── Messages.py      # Commandes $del_messages, $say
  │   │   └── Stream.py        # Commandes $play, $skip, $queue, $leave, $pause, $resume, $stop, $reset
  │   └── db/
- │       ├── filename.pickle  # Base de données Bank (DataFrame pandas sérialisé)
+ │       ├── database.py      # Module de gestion de la base de données SQLite
+ │       ├── bank.db          # Base de données Bank (SQLite)
  │       └── joke.csv         # Base de blagues encodées en base64
  ├── tests/                   # Tests unitaires (pytest + pytest-asyncio)
  │   ├── conftest.py          # Fixtures partagées (mock bot, mock ctx)

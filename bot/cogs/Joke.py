@@ -1,17 +1,20 @@
 from discord.ext import commands
 from discord.ext.commands.context import Context
-import pandas
 import random
 import base64
-
 import logging
 
-# Configuration du logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class Joke(commands.Cog):
+
+    def _load_jokes(self):
+        """Load jokes from CSV file."""
+        with open("./bot/db/joke.csv", "r", encoding="utf-8") as f:
+            jokes = [line.strip() for line in f if line.strip()]
+        return jokes
 
     @commands.command(name='joke')
     async def say_joke(self, ctx: Context):
@@ -19,9 +22,9 @@ class Joke(commands.Cog):
         The bot say a random joke
         """
         logger.info("requesting joke")
-        df = pandas.read_csv("./bot/db/joke.csv", sep=" ")
-        rnumber = random.randint(1, len(df))
-        decoding = base64.b64decode(df.iloc[rnumber, 0])
+        jokes = self._load_jokes()
+        joke_encoded = random.choice(jokes)
+        decoding = base64.b64decode(joke_encoded)
         await ctx.send(decoding.decode("utf-8"))
 
     @commands.command(name='joke_tts')
@@ -29,7 +32,7 @@ class Joke(commands.Cog):
         """
         The bot say a random joke with text to speech active
         """
-        df = pandas.read_csv("./bot/db/joke.csv", sep=" ")
-        rnumber = random.randint(1, len(df))
-        decoding = base64.b64decode(df.iloc[rnumber, 0])
+        jokes = self._load_jokes()
+        joke_encoded = random.choice(jokes)
+        decoding = base64.b64decode(joke_encoded)
         await ctx.send(decoding.decode("utf-8"), tts=True)

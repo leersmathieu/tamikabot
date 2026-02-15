@@ -1,7 +1,7 @@
 services:
   bgutil-provider:
     image: brainicism/bgutil-ytdlp-pot-provider
-    restart: unless-stopped
+    # restart: unless-stopped
     init: true
     ports:
       - "4416:4416"

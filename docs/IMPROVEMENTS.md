@@ -26,13 +26,19 @@ intents.message_content = True
  
 ---
  
-### 3. Remplacement du stockage pickle par SQLite
- 
-**Pourquoi** : Le fichier pickle est fragile (corruption en cas de crash pendant l'écriture), non lisible manuellement, et pose des risques de sécurité (exécution de code arbitraire à la désérialisation).
- 
-**Solution** : Remplacer par `sqlite3` (inclus dans Python, zéro dépendance). Un simple fichier `bank.db` avec une table `users(discord_id TEXT PRIMARY KEY, coins INTEGER)`.
- 
-**Bénéfice** : Transactions atomiques, requêtes SQL, pas de dépendance à pandas juste pour la Bank.
+### ~~3. Remplacement du stockage pickle par SQLite~~ ✅
+
+**Réalisé.** Migration du stockage pickle/pandas vers SQLite :
+- Module `bot/db/database.py` créé avec la classe `BankDatabase`
+- Table `users(discord_id TEXT PRIMARY KEY, coins INTEGER)`
+- Transactions atomiques garanties par SQLite
+- Script de migration `script/migrate_pickle_to_sqlite.py` pour convertir les données existantes
+- Tests unitaires mis à jour (5 tests Bank, tous passent)
+- Cog Bank refactorisé pour utiliser SQLite au lieu de pickle/pandas
+- Cog Joke refactorisé pour utiliser le module `csv` standard au lieu de pandas
+- Pandas conservé dans `requirements.txt` (nécessaire pour scripts utilitaires et migration)
+
+**Bénéfices** : Plus de risque de corruption du stockage Bank, pas d'exécution de code arbitraire, lisible avec n'importe quel client SQLite, transactions atomiques garanties.
  
 ---
  
@@ -211,4 +217,3 @@ $poll "On joue à quoi ce soir ?" "Valorant" "CS2" "Rocket League" "Rien je suis
  # Points d'attention
 
 - **googletrans 4.0.0rc1** est une version release candidate qui peut être instable car elle dépend de l'API non officielle de Google Translate.
-- **Persistance Bank** : Le fichier pickle n'est pas robuste (corruption possible). Aucun backup n'est en place.

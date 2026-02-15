@@ -12,7 +12,7 @@
 
 ## Bank (`bot/cogs/Bank.py`)
 
-Système de monnaie virtuelle persisté dans un fichier pickle (`bot/db/filename.pickle`).
+Système de monnaie virtuelle persisté dans une base de données SQLite (`bot/db/bank.db`).
 
 | Commande | Usage | Description |
 |---|---|---|
@@ -21,7 +21,7 @@ Système de monnaie virtuelle persisté dans un fichier pickle (`bot/db/filename
 
 **Restriction** : `$add_coins` est réservé à l'admin configuré via `ADMIN_ID`.
 
-**Stockage** : DataFrame pandas sérialisé en pickle. Le script `script/create_pandas_df.py` permet de réinitialiser la base.
+**Stockage** : Base de données SQLite avec transactions atomiques. Le script `script/migrate_pickle_to_sqlite.py` permet de migrer les anciennes données pickle.
 
 ---
 

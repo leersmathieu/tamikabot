@@ -110,5 +110,9 @@ venv/
 bot/cogs/__pycache__/
 .ipynb_checkpoints
 
+# Bank database files
+bot/db/bank.db
+bot/db/filename.pickle
+
 # YouTube cookies (données sensibles)
 cookies.txt

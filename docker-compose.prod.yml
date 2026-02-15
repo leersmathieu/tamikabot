@@ -8,7 +8,7 @@ services:
 
   tamikabot:
     image: leersma/tamikabot:latest
-    # restart: unless-stopped
+    restart: unless-stopped
     privileged: true
     ulimits:
       nproc: 65535

@@ -1,21 +1,18 @@
 import pytest
-import pickle
-import pandas as pd
 import os
-import tempfile
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 from bot.cogs.Bank import Bank
+from bot.db.database import BankDatabase
 
 
 @pytest.fixture
 def bank_db(tmp_path):
-    """Create a temporary pickle DB for testing."""
+    """Create a temporary SQLite DB for testing."""
+    db_path = tmp_path / "bank.db"
+    db = BankDatabase(str(db_path))
     admin_id = os.environ.get('ADMIN_ID', '183999045168005120')
-    df = pd.DataFrame({'bank': [100]}, index=[admin_id])
-    db_path = tmp_path / "filename.pickle"
-    with open(db_path, 'wb') as f:
-        pickle.dump(df, f)
-    return str(db_path)
+    db.set_balance(admin_id, 100)
+    return db
 
 
 @pytest.fixture
@@ -24,8 +21,7 @@ def bank_cog(bot, bank_db):
         cog = Bank.__new__(Bank)
         cog.bot = bot
         cog.admin_id = int(os.environ.get('ADMIN_ID', '183999045168005120'))
-        with open(bank_db, 'rb') as f:
-            cog.db = pickle.load(f)
+        cog.db = bank_db
     return cog
 
 
@@ -49,6 +45,42 @@ async def test_bank_no_account(bank_cog, ctx):
     assert "pas de compte" in sent_text
 
 
-def test_bank_pickle_file_exists():
-    """Test that the bank database file exists."""
-    assert os.path.exists('./bot/db/filename.pickle')
+@pytest.mark.asyncio
+async def test_add_coins_creates_new_account(bank_cog, ctx, bot):
+    """Test that $add_coins creates a new account if it doesn't exist."""
+    ctx.message.author.id = int(os.environ['ADMIN_ID'])
+    bot.fetch_user.return_value.mention = "<@123456789>"
+    
+    await Bank.add_coins.callback(bank_cog, ctx, "<@123456789>", 50)
+    
+    balance = bank_cog.db.get_balance("123456789")
+    assert balance == 50
+    ctx.send.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_add_coins_updates_existing_account(bank_cog, ctx, bot):
+    """Test that $add_coins updates an existing account."""
+    admin_id = os.environ['ADMIN_ID']
+    ctx.message.author.id = int(admin_id)
+    bot.fetch_user.return_value.mention = f"<@{admin_id}>"
+    
+    await Bank.add_coins.callback(bank_cog, ctx, f"<@{admin_id}>", 50)
+    
+    balance = bank_cog.db.get_balance(admin_id)
+    assert balance == 150
+    ctx.send.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_add_coins_removes_coins(bank_cog, ctx, bot):
+    """Test that $add_coins can remove coins with negative amount."""
+    admin_id = os.environ['ADMIN_ID']
+    ctx.message.author.id = int(admin_id)
+    bot.fetch_user.return_value.mention = f"<@{admin_id}>"
+    
+    await Bank.add_coins.callback(bank_cog, ctx, f"<@{admin_id}>", -30)
+    
+    balance = bank_cog.db.get_balance(admin_id)
+    assert balance == 70
+    ctx.send.assert_called_once()
