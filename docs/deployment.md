@@ -105,10 +105,11 @@ YouTube peut bloquer les requêtes yt-dlp avec l'erreur `Sign in to confirm you'
 Le plugin **bgutil-ytdlp-pot-provider** génère automatiquement des PO Tokens (Proof of Origin) pour authentifier les requêtes. C'est la solution recommandée car elle fonctionne indépendamment de l'IP.
 
 - Le service `bgutil-provider` tourne dans un container Docker séparé
-- Le plugin Python est installé dans l'image tamikabot via `requirements.txt`
+- Le plugin est installé dans le répertoire des plugins yt-dlp (`/root/.config/yt-dlp/plugins`) via le Dockerfile
 - yt-dlp communique avec le serveur via `http://bgutil-provider:4416`
+- La configuration de l'extracteur est définie dans `Stream.py` avec `extractor_args`
 
-Aucune configuration manuelle n'est nécessaire, tout est géré par le `docker-compose.yml`.
+Aucune configuration manuelle n'est nécessaire, tout est géré par le `docker-compose.yml` et le Dockerfile.
 
 ### Cookies YouTube (solution complémentaire)
 
@@ -121,6 +122,53 @@ Les cookies peuvent être utilisés en complément du PO Token :
 Le fichier est monté en read-only (`:ro`) et copié vers `/tmp/cookies.txt` au démarrage du bot pour éviter que yt-dlp ne l'écrase.
 
 > **Note** : Les cookies sont liés à l'IP d'export. Ils fonctionnent en local mais peuvent être rejetés sur un VPS avec une IP différente. Le PO Token résout ce problème.
+
+## Dépannage YouTube / yt-dlp
+
+### Erreur "Sign in to confirm you're not a bot"
+
+Si vous obtenez cette erreur malgré la présence du plugin bgutil et des cookies :
+
+**1. Vérifier que les cookies sont valides**
+
+Les cookies YouTube expirent régulièrement (rotation de sécurité). Le message d'erreur suivant dans les logs indique des cookies expirés :
+
+```
+WARNING: [youtube] The provided YouTube account cookies are no longer valid
+```
+
+**Solution** : Réexporter les cookies depuis votre navigateur :
+1. Connectez-vous à YouTube dans votre navigateur
+2. Utilisez l'extension [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc)
+3. Exportez les cookies et remplacez le fichier `cookies.txt` à la racine du projet
+4. Redémarrez les containers : `docker compose restart`
+
+**2. Vérifier que le plugin bgutil fonctionne**
+
+Activez temporairement le mode verbose dans `bot/cogs/Stream.py` :
+
+```python
+YDL_OPTIONS = {
+    'quiet': False,
+    'verbose': True,
+    # ... reste de la config
+}
+```
+
+Recherchez dans les logs :
+- `[debug] Plugin directories:` → confirme que les plugins sont chargés
+- `[pot] PO Token Providers: bgutil:http-1.2.2 (external)` → confirme que bgutil est détecté
+- `Generating a gvs PO Token for ... client via bgutil HTTP server` → confirme que bgutil génère des tokens
+
+**3. Vérifier la connectivité réseau**
+
+Le container `tamikabot` doit pouvoir atteindre `bgutil-provider:4416`. Testez depuis le container :
+
+```bash
+docker exec tamikabot-tamikabot-1 wget -O- http://bgutil-provider:4416/ping
+```
+
+Vous devriez obtenir une réponse JSON avec la version du serveur.
 
 ## Lancement local (sans Docker)
 

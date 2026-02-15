@@ -1,3 +1,4 @@
+import asyncio
 from discord.ext import commands
 from discord.ext.commands.context import Context
 
@@ -20,6 +21,7 @@ class Messages(commands.Cog):
             for message in messages:
                 print(f'deleted messages :{message.content}')
                 await message.delete()
+                await asyncio.sleep(0.5)  # Delay to avoid Discord rate limiting
         else:
             await ctx.send('Permission denied!')
 

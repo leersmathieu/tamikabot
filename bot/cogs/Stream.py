@@ -17,13 +17,18 @@ logger = logging.getLogger(__name__)
 YDL_OPTIONS = {
     'format': 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio/best',
     'noplaylist': True,
-    'quiet': True,
-    'no_warnings': True,
+    'quiet': False,
+    'no_warnings': False,
+    'verbose': True,
     'default_search': 'ytsearch',
     'cookiefile': '/tmp/cookies.txt',
     'socket_timeout': 30,
     'retries': 3,
     'sleep_interval_requests': 1,  # 1s entre chaque requête HTTP vers YouTube
+    'js_runtimes': {
+        'node': {},
+    },
+    'remote_components': ['ejs:github'],
     'extractor_args': {
         'youtubepot-bgutilhttp': {
             'base_url': ['http://bgutil-provider:4416'],
