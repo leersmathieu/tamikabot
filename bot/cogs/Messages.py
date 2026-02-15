@@ -12,7 +12,7 @@ class Messages(commands.Cog):
         self.admin_id = int(config.ADMIN_ID) if config.ADMIN_ID else None
 
     @commands.command(name='del_messages')
-    async def delete_messages(self, ctx: Context, number_of_messages: int):
+    async def delete_messages(self, ctx: Context, number_of_messages: int = commands.parameter(description="Nombre de messages à supprimer")):
         """
         Supprime X messages du salon actuel
         """
@@ -26,7 +26,13 @@ class Messages(commands.Cog):
             await ctx.send('Permission denied!')
 
     @commands.command(name='say')
-    async def say(self, ctx: Context, chan_id: int, *, text: str):
+    async def say(
+        self, 
+        ctx: Context, 
+        chan_id: int = commands.parameter(description="ID du salon cible"),
+        *, 
+        text: str = commands.parameter(description="Message à envoyer")
+    ):
         """
         Le bot envoie un message dans un salon donné
         """

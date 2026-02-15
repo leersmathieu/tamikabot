@@ -14,7 +14,7 @@ class Art(commands.Cog):
         self.bot = bot
 
     @commands.command(name='ascii')
-    async def ascii(self, ctx: Context, *, sentences: str):
+    async def ascii(self, ctx: Context, *, sentences: str = commands.parameter(description="Le texte à transformer")):
         """
         Transforme une phrase en art ASCII
         """

@@ -14,7 +14,7 @@ class Google(commands.Cog):
         self.translator = Translator()
 
     @commands.command(name='google')
-    async def google_search(self, ctx: Context, *, entry: str):
+    async def google_search(self, ctx: Context, *, entry: str = commands.parameter(description="Mots-clés de recherche")):
         """
         Effectue une recherche Google à partir d'une requête
         """
@@ -29,7 +29,13 @@ class Google(commands.Cog):
             ctx.send('Invalid URL')
 
     @commands.command(name='translate')
-    async def translate(self, ctx: Context, language: str, *, sentences: str):
+    async def translate(
+        self, 
+        ctx: Context, 
+        language: str = commands.parameter(description="Code de langue cible (ex: en, fr, es)"),
+        *, 
+        sentences: str = commands.parameter(description="Texte à traduire")
+    ):
         """
         Traduit un texte vers une langue donnée
         """

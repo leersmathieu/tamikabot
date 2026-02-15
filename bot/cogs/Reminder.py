@@ -84,8 +84,16 @@ class Reminder(commands.Cog):
         await self.bot.wait_until_ready()
 
     @commands.command(name='remind')
-    async def remind(self, ctx: Context, time_str: str, *, message: str):
-        """Crée un rappel. Usage: $remind 30m Message ici"""
+    async def remind(
+        self, 
+        ctx: Context, 
+        time_str: str = commands.parameter(description="Délai (30s, 15m, 2h, 7d)"),
+        *, 
+        message: str = commands.parameter(description="Message du rappel")
+    ):
+        """
+        Crée un rappel. Usage: $remind 30m Message ici
+        """
         seconds = self.parse_time(time_str)
         
         if seconds is None:
@@ -172,8 +180,10 @@ class Reminder(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name='remind_cancel')
-    async def cancel_reminder(self, ctx: Context, reminder_id: int):
-        """Annule un rappel par son ID. Usage: $remind_cancel 1"""
+    async def cancel_reminder(self, ctx: Context, reminder_id: int = commands.parameter(description="ID du rappel à annuler")):
+        """
+        Annule un rappel par son ID. Usage: $remind_cancel 1
+        """
         user_id = str(ctx.author.id)
         
         if self.db.delete_reminder(reminder_id, user_id):

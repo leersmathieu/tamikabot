@@ -60,7 +60,7 @@ async def test_play_not_in_voice(stream_cog, ctx):
     """Test that $play requires the user to be in a voice channel."""
     ctx.author.voice = None
     await Stream.play.callback(stream_cog, ctx, query="test")
-    ctx.send.assert_called_with("You are not connected to a voice channel.")
+    ctx.send.assert_called_with("Tu n'es pas connecté à un salon vocal.")
 
 
 @pytest.mark.asyncio
@@ -77,7 +77,7 @@ async def test_play_no_results(stream_cog, voice_ctx):
     with patch('discord.utils.get', return_value=mock_voice):
         await Stream.play.callback(stream_cog, voice_ctx, query="nonexistent")
 
-    voice_ctx.send.assert_any_call("No results found.")
+    voice_ctx.send.assert_any_call("Aucun résultat trouvé.")
 
 
 @pytest.mark.asyncio
@@ -137,7 +137,7 @@ async def test_skip_when_playing(stream_cog, voice_ctx):
         await Stream.skip.callback(stream_cog, voice_ctx)
 
     mock_voice.stop.assert_called_once()
-    voice_ctx.send.assert_called_with("⏭ Skipped.")
+    voice_ctx.send.assert_called_with("⏭ Chanson passée.")
 
 
 @pytest.mark.asyncio
@@ -149,7 +149,7 @@ async def test_skip_when_not_playing(stream_cog, voice_ctx):
     with patch('discord.utils.get', return_value=mock_voice):
         await Stream.skip.callback(stream_cog, voice_ctx)
 
-    voice_ctx.send.assert_called_with("Nothing is playing.")
+    voice_ctx.send.assert_called_with("Rien n'est en cours de lecture.")
 
 
 # ── queue ────────────────────────────────────────────────────────────
@@ -158,7 +158,7 @@ async def test_skip_when_not_playing(stream_cog, voice_ctx):
 async def test_queue_empty(stream_cog, voice_ctx):
     """Test that $queue shows empty message."""
     await Stream.queue.callback(stream_cog, voice_ctx)
-    voice_ctx.send.assert_called_with("Queue is empty.")
+    voice_ctx.send.assert_called_with("La queue est vide.")
 
 
 @pytest.mark.asyncio
@@ -174,7 +174,7 @@ async def test_queue_with_songs(stream_cog, voice_ctx, fake_song):
     await Stream.queue.callback(stream_cog, voice_ctx)
 
     sent_msg = voice_ctx.send.call_args[0][0]
-    assert "Now playing:" in sent_msg
+    assert "En cours:" in sent_msg
     assert "Test Song" in sent_msg
     assert "Song Two" in sent_msg
     assert "Song Three" in sent_msg
@@ -209,7 +209,7 @@ async def test_leave_not_connected(stream_cog, voice_ctx):
     with patch('discord.utils.get', return_value=None):
         await Stream.leave.callback(stream_cog, voice_ctx)
 
-    voice_ctx.send.assert_called_with("Not connected")
+    voice_ctx.send.assert_called_with("Non connecté")
 
 
 # ── pause ────────────────────────────────────────────────────────────
@@ -224,7 +224,7 @@ async def test_pause_when_playing(stream_cog, voice_ctx):
         await Stream.pause.callback(stream_cog, voice_ctx)
 
     mock_voice.pause.assert_called_once()
-    voice_ctx.send.assert_called_with("⏸ Paused.")
+    voice_ctx.send.assert_called_with("⏸ En pause.")
 
 
 @pytest.mark.asyncio
@@ -236,7 +236,7 @@ async def test_pause_when_not_playing(stream_cog, voice_ctx):
     with patch('discord.utils.get', return_value=mock_voice):
         await Stream.pause.callback(stream_cog, voice_ctx)
 
-    voice_ctx.send.assert_called_with("No audio is playing")
+    voice_ctx.send.assert_called_with("Aucun audio en cours de lecture")
 
 
 # ── resume ───────────────────────────────────────────────────────────
@@ -251,7 +251,7 @@ async def test_resume_when_paused(stream_cog, voice_ctx):
         await Stream.resume.callback(stream_cog, voice_ctx)
 
     mock_voice.resume.assert_called_once()
-    voice_ctx.send.assert_called_with("▶ Resumed.")
+    voice_ctx.send.assert_called_with("▶ Repris.")
 
 
 @pytest.mark.asyncio
@@ -263,7 +263,7 @@ async def test_resume_when_not_paused(stream_cog, voice_ctx):
     with patch('discord.utils.get', return_value=mock_voice):
         await Stream.resume.callback(stream_cog, voice_ctx)
 
-    voice_ctx.send.assert_called_with("Audio not paused")
+    voice_ctx.send.assert_called_with("L'audio n'est pas en pause")
 
 
 # ── stop ─────────────────────────────────────────────────────────────
@@ -281,7 +281,7 @@ async def test_stop_when_connected(stream_cog, voice_ctx, fake_song):
         await Stream.stop.callback(stream_cog, voice_ctx)
 
     mock_voice.stop.assert_called_once()
-    voice_ctx.send.assert_called_with("⏹ Stopped.")
+    voice_ctx.send.assert_called_with("⏹ Arrêté.")
     assert guild_id not in stream_cog.queues
     assert guild_id not in stream_cog.current
 
@@ -292,7 +292,7 @@ async def test_stop_when_not_connected(stream_cog, voice_ctx):
     with patch('discord.utils.get', return_value=None):
         await Stream.stop.callback(stream_cog, voice_ctx)
 
-    voice_ctx.send.assert_called_with("Not connected")
+    voice_ctx.send.assert_called_with("Non connecté")
 
 
 # ── reset ────────────────────────────────────────────────────────────
@@ -313,7 +313,7 @@ async def test_reset_when_connected(stream_cog, voice_ctx, fake_song):
     mock_voice.stop.assert_called_once()
     mock_voice.cleanup.assert_called_once()
     mock_voice.disconnect.assert_awaited_once()
-    voice_ctx.send.assert_called_with("🔄 Reset complete.")
+    voice_ctx.send.assert_called_with("🔄 Réinitialisation terminée.")
     assert guild_id not in stream_cog.queues
     assert guild_id not in stream_cog.current
 
@@ -324,7 +324,7 @@ async def test_reset_when_not_connected(stream_cog, voice_ctx):
     with patch('discord.utils.get', return_value=None):
         await Stream.reset.callback(stream_cog, voice_ctx)
 
-    voice_ctx.send.assert_called_with("Not connected")
+    voice_ctx.send.assert_called_with("Non connecté")
 
 
 # ── _play_next ───────────────────────────────────────────────────────

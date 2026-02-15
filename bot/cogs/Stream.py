@@ -139,7 +139,7 @@ class Stream(commands.Cog):
 
     @commands.command(name='play')
     @commands.cooldown(1, 5, commands.BucketType.guild)  # 1 commande par 5 secondes par serveur
-    async def play(self, ctx: Context, *, query: str):
+    async def play(self, ctx: Context, *, query: str = commands.parameter(description="URL YouTube ou mots-clés de recherche")):
         """
         Joue un audio YouTube en streaming. Accepte une URL ou des mots-clés de recherche.
         Si un audio est déjà en cours, ajoute à la queue.

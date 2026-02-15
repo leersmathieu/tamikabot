@@ -19,7 +19,12 @@ class Bank(commands.Cog):
         logger.info("Bank database initialized successfully.")
 
     @commands.command(name='add_coins')
-    async def add_coins(self, ctx: Context, user: str, amount: int):
+    async def add_coins(
+        self, 
+        ctx: Context, 
+        user: str = commands.parameter(description="Mention de l'utilisateur (@user)"),
+        amount: int = commands.parameter(description="Montant de coins (négatif pour retirer)")
+    ):
         """
         Ajoute (ou retire si nombre négatif) un montant de coins à un utilisateur
         """
