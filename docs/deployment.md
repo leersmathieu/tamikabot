@@ -92,7 +92,7 @@ Pour désactiver un ou plusieurs Cogs (par exemple Stream en production), ajoute
 DISABLED_COGS=Stream
 ```
 
-Voir `docs/configuration.md` pour plus de détails.
+Voir `docs/README.md` (section Configuration) pour plus de détails.
 
 > **Note** : Le cog Lfg est spécifique au serveur Payday2France. Si vous l'utilisez sur un autre serveur, vous devrez adapter le rôle `Recherche joueurs` et les phrases dans `bot/lfg_sentences.py`.
 
@@ -179,4 +179,8 @@ set DISCORD_TOKEN=votre_token_ici         # Windows CMD
 python main.py
 ```
 
-**Prérequis local** : ffmpeg doit être installé et accessible dans le PATH.
+**Prérequis locaux** : 
+- Python 3.12+
+- ffmpeg (dans le PATH pour le streaming audio)
+- Node.js 20.x (pour yt-dlp signature decryption)
+- bgutil-ytdlp-pot-provider doit être lancé séparément ou désactiver le cog Stream

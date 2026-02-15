@@ -58,8 +58,15 @@ docker-compose -f docker-compose.prod.yml up -d
 - `$del_messages <N>` — Supprime N messages (requiert `manage_messages`)
 - `$say <channel_id> <texte>` — Envoie un message (admin `ADMIN_ID`)
 
+### Reminder
+- `$remind <délai> <message>` — Crée un rappel (ex: `$remind 30m Lancer la lessive`)
+- `$reminders` — Liste vos rappels actifs
+- `$remind_cancel <id>` — Annule un rappel
+
 ### Stream
-- `$play <url>` — Joue une musique YouTube
+- `$play <url ou recherche>` — Joue un audio YouTube (URL ou mots-clés)
+- `$skip` — Passe à la chanson suivante
+- `$queue` — Affiche la queue de lecture
 - `$pause` / `$resume` / `$stop` / `$reset` / `$leave` — Contrôle audio
 
 ## Configuration requise
@@ -91,26 +98,23 @@ python -m pytest tests/ -v
 
 **Note** : `tamikabot:latest` est le build local (derniers changements). `leersma/tamikabot:latest` est l'image Docker Hub (version publiée).
 
-Les tests couvrent tous les Cogs (Art, Bank, Google, Joke, Lfg, Messages, Stream) et la configuration du bot (46 tests). Le cog Lfg est spécifique au serveur Payday2France.
+Les tests couvrent tous les Cogs (Art, Bank, Google, Joke, Lfg, Messages, Reminder, Stream) et la configuration du bot (67 tests). Le cog Lfg est spécifique au serveur Payday2France.
 
 ## Documentation
 
-La documentation technique a été découpée en plusieurs fichiers dans `docs/` :
-- `docs/README.md` — Sommaire
-- `docs/overview.md` — Vue d'ensemble
-- `docs/architecture.md` — Architecture du projet
-- `docs/configuration.md` — Configuration détaillée
-- `docs/cogs.md` — Détail des commandes
-- `docs/deployment.md` — Déploiement (Docker)
-- `docs/tests.md` — Tests
-- `docs/intents.md` — Intents Discord
-- `docs/notes.md` — Points d'attention
+La documentation technique complète est disponible dans `docs/` :
+- **[docs/README.md](docs/README.md)** — Documentation principale (vue d'ensemble, configuration, architecture, tests)
+- **[docs/cogs.md](docs/cogs.md)** — Détail de toutes les commandes par Cog
+- **[docs/deployment.md](docs/deployment.md)** — Guide de déploiement Docker (local et VPS)
+- **[docs/migration_sqlite.md](docs/migration_sqlite.md)** — Migration des données pickle vers SQLite
+- **[docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md)** — Idées d'améliorations futures
 
 ## Développement
 
 ### Prérequis locaux
-- Python 3.10+
-- ffmpeg (dans le PATH pour la musique)
+- Python 3.12+
+- ffmpeg (dans le PATH pour le streaming audio)
+- Node.js 20.x (pour yt-dlp signature decryption)
 
 ### Installation locale
 ```bash
@@ -122,7 +126,7 @@ python main.py
 
 ## Historique
 
-- **v3.x** : Réintégration du cog LFG (Payday2France), désactivation de Cogs via `DISABLED_COGS`, streaming YouTube avec PO Token, Python 3.12, `discord.py` 2.6.4
+- **v3.x** : Cog Reminder (rappels persistants), streaming YouTube avec PO Token (bgutil), Node.js 20.x pour yt-dlp, Python 3.12, `discord.py` 2.6.4, SQLite pour Bank et Reminder, documentation en français
 - **v2.x** : Migration vers `discord.py` 2.4.0, Intents, tests unitaires, documentation découpée, configuration `ADMIN_ID`
 - **v1.x** : Version initiale Python (migration depuis Node.js)
 
