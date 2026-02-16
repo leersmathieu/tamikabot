@@ -1,6 +1,7 @@
 services:
   bgutil-provider:
     image: brainicism/bgutil-ytdlp-pot-provider
+    mem_limit: 512m
     # restart: unless-stopped
     init: true
     ports:
@@ -8,6 +9,7 @@ services:
 
   tamikabot:
     image: tamikabot:latest
+    mem_limit: 1024m
     # restart: unless-stopped
     privileged: true
     ulimits:
